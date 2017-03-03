@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.cgstate.boxmobile.activities.MainActivity">
+
+    <include layout="@layout/toolbar_layout" />
+
+    <Button
+        android:layout_margin="20dp"
+        android:id="@+id/btn_start_upload"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_show"
+        android:text="上传信息" />
+
+
+
+    <Button
+        android:layout_margin="20dp"
+        android:id="@+id/btn_start_download"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_show"
+        android:text="下载信息" />
+
+
+    <Button
+        android:layout_margin="20dp"
+        android:id="@+id/btn_exit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_show"
+        android:text="退出登陆" />
+
+
+</LinearLayout>

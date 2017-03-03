@@ -1,0 +1,15 @@
+*.iml
+.gradle
+/local.properties
+/.idea/workspace.xml
+/.idea/libraries
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+/zxing/build/
+/qrcodecore/build/
+/multi-image-selector/build/
+/app/build/
+/library_photoview/build/
+/.idea/

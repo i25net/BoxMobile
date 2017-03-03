@@ -1,0 +1,52 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="AppBaseTheme">
+
+    </style>
+
+    <style name="AppBaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
+
+        <!-- customize the color palette -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+        <!--<item name="android:textColorPrimary">@color/colorWhite</item>-->
+
+        <!--后退箭头样式-->
+
+        <!---->
+        <!--&lt;!&ndash; Toolbar Theme / Apply white arrow &ndash;&gt;-->
+        <!--<item name="colorControlNormal">@android:color/white</item>-->
+        <!--&lt;!&ndash;Navigation icon颜色设置&ndash;&gt;-->
+        <!--<item name="drawerArrowStyle">@style/AppTheme.MyDrawerArrowStyle</item>-->
+
+        <!--后退箭头样式-->
+
+
+    </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+
+    <!--加入一個新的 navigation drarwer 的風格-->
+    <style name="AppTheme.MyDrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
+        <!--將 spinBars 屬性設定為 false-->
+        <item name="spinBars">false</item>
+        <!--設定 drawer arrow 的顏色-->
+        <item name="color">@android:color/white</item>
+    </style>
+
+
+    <style name="MatchMatch">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+
+</resources>

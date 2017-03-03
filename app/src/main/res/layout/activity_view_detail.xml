@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activity_add_info"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/toolbar_layout" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="3dp"
+                >
+
+                <!--<ImageView-->
+                <!--android:id="@+id/iv_goods_pic"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:padding="3dp"-->
+                <!--android:src="@drawable/select_image" />-->
+
+                <android.support.v7.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/rv_view"></android.support.v7.widget.RecyclerView>
+
+            </RelativeLayout>
+            <!--"goods_name":"xxx",           //物品名称-->
+            <!--"goods_weight":"xxx",         //物品重量-->
+            <!--"goods_color":"xxx",          //物品颜色-->
+            <!--"goods_memo":"xxx"            //物品备注-->
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="6dp"
+                android:background="@drawable/data_background"
+                android:orientation="vertical"
+                android:padding="10dp">
+
+                <include layout="@layout/split_line" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="5dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:padding="3dp"
+                        android:text="物品名称："
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/tv_goods_name"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
+                        android:background="@drawable/data_background"
+                        android:gravity="left"
+                        android:padding="3dp"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <include layout="@layout/split_line" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="5dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:padding="3dp"
+                        android:text="物品重量："
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/tv_goods_weight"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
+                        android:background="@drawable/data_background"
+                        android:gravity="left"
+                        android:padding="3dp"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <include layout="@layout/split_line" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="5dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:padding="3dp"
+                        android:text="物品颜色："
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/tv_goods_color"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
+                        android:background="@drawable/data_background"
+                        android:gravity="left"
+
+                        android:padding="3dp"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <include layout="@layout/split_line" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="5dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:padding="3dp"
+                        android:text="物品备注："
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/tv_goods_memo"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
+                        android:background="@drawable/data_background"
+                        android:gravity="left"
+                        android:padding="3dp"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <include layout="@layout/split_line" />
+
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+
+</LinearLayout>

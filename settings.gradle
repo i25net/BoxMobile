@@ -1,0 +1,1 @@
+include ':app', ':zxing', ':qrcodecore', ':multi-image-selector', ':library_photoview'
