@@ -1,0 +1,197 @@
+package com.cgstate.boxmobile.activities;
+
+import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+
+import com.cgstate.boxmobile.MyApplication;
+import com.cgstate.boxmobile.R;
+import com.cgstate.boxmobile.bean.HomeModuleEntity;
+import com.cgstate.boxmobile.bean.LoginBean;
+import com.cgstate.boxmobile.impl.OnItemClickListener;
+import com.cgstate.boxmobile.utils.DensityUtils;
+import com.cgstate.boxmobile.view.MyItemDecoration;
+
+import java.util.ArrayList;
+import java.util.Random;
+
+import de.hdodenhof.circleimageview.CircleImageView;
+
+public class HomeActivity extends BaseActivity implements OnItemClickListener {
+    private CircleImageView iconImage;
+    private TextView tvShanghuMingcheng;
+    private TextView tvShanghuMiaoshu;
+    private RecyclerView rvHome;
+    private ArrayList<HomeModuleEntity> mDatas;
+
+    private int[] backGrounds = {R.drawable.icon_module3_selector,
+            R.drawable.icon_module4_selector,
+            R.drawable.ic_random1_selector,
+            R.drawable.ic_random2_selector,
+            R.drawable.ic_random3_selector};
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_home);
+        initService();
+        initViews();
+        initTitleData();
+        initRecyclerViewDivider();
+        initData();
+        getDisplay();
+    }
+
+    public void getDisplay() {
+        float xdpi = getResources().getDisplayMetrics().xdpi;
+        float ydpi = getResources().getDisplayMetrics().ydpi;
+        Log.d("HomeActivity", "xdpi:" + xdpi);
+        Log.d("HomeActivity", "ydpi:" + ydpi);
+    }
+
+
+    /**
+     * 启动服务
+     */
+    private void initService() {
+        MyApplication.startService();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        MyApplication.stopService();
+    }
+
+    /**
+     * 初始化头部内容
+     */
+    private void initTitleData() {
+        Intent intent = getIntent();
+        if (intent != null) {
+            Bundle bundle = intent.getExtras();
+            if (bundle != null) {
+                LoginBean.DataBean loginData = (LoginBean.DataBean) bundle.getSerializable("login");
+                tvShanghuMingcheng.setText(loginData.store_name);
+                tvShanghuMiaoshu.setText(loginData.staff_name);
+            }
+        }
+    }
+
+    /**
+     * rv添加数据
+     */
+    private void initData() {
+        mDatas = new ArrayList<>();
+
+        HomeModuleEntity module1 = new HomeModuleEntity("上传图文信息", R.drawable.icon_module1_selector);
+        HomeModuleEntity module2 = new HomeModuleEntity("查看图闻信息", R.drawable.icon_module2_selector);
+        mDatas.add(module1);
+        mDatas.add(module2);
+
+        for (int i = 3; i <= 27; i++) {
+            int back = backGrounds[new Random().nextInt(backGrounds.length)];
+            HomeModuleEntity homeModuleEntity = new HomeModuleEntity("模块" + i, back);
+            mDatas.add(homeModuleEntity);
+        }
+        HomeDataAdapter homeDataAdapter = new HomeDataAdapter();
+        rvHome.setAdapter(homeDataAdapter);
+
+        homeDataAdapter.setOnItemClickListener(this);
+
+
+    }
+
+    /**
+     * 初始化rv分割线
+     */
+    private void initRecyclerViewDivider() {
+
+        rvHome.setLayoutManager(new GridLayoutManager(mContext, 3, GridLayoutManager.VERTICAL, false));
+
+
+        //dp转换px
+        int offset = DensityUtils.dip2px(1.3f, mContext);
+
+        rvHome.addItemDecoration(new MyItemDecoration(offset));
+
+
+    }
+
+
+    private void initViews() {
+        iconImage = (CircleImageView) findViewById(R.id.icon_image);
+        tvShanghuMingcheng = (TextView) findViewById(R.id.tv_shanghu_mingcheng);
+        tvShanghuMiaoshu = (TextView) findViewById(R.id.tv_shanghu_miaoshu);
+        rvHome = (RecyclerView) findViewById(R.id.rv_home);
+    }
+
+    @Override
+    public void onItemClick(int position) {
+        switch (position) {
+            case 0:
+                openAnotherActivity(UploadGoodsInfoActivity.class);
+                break;
+            case 1:
+                openAnotherActivity(DownLoadGoodsInfoActivity.class);
+                break;
+        }
+    }
+
+
+
+    class HomeDataAdapter extends RecyclerView.Adapter {
+
+
+        private OnItemClickListener onItemClickListener;
+
+
+        private void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+            this.onItemClickListener = onItemClickListener;
+        }
+
+        @Override
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            return new HomeViewHolder(LayoutInflater.from(mContext).inflate(R.layout.item_home, parent, false));
+        }
+
+        @Override
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
+            if (holder instanceof HomeViewHolder) {
+                HomeViewHolder homeViewHolder = (HomeViewHolder) holder;
+                homeViewHolder.tvModuleName.setText(mDatas.get(position).name);
+                Drawable drawable = mContext.getResources().getDrawable(mDatas.get(position).background);
+                homeViewHolder.tvModuleName.setCompoundDrawablesWithIntrinsicBounds(null, drawable, null, null);
+                homeViewHolder.tvModuleName.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onItemClickListener.onItemClick(position);
+                    }
+                });
+            }
+        }
+
+        @Override
+        public int getItemCount() {
+            return mDatas == null ? 0 : mDatas.size();
+        }
+    }
+
+    class HomeViewHolder extends RecyclerView.ViewHolder {
+
+        TextView tvModuleName;
+
+        public HomeViewHolder(View itemView) {
+            super(itemView);
+            tvModuleName = (TextView) itemView.findViewById(R.id.tv_module_name);
+        }
+    }
+
+}

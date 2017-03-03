@@ -18,7 +18,6 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".activities.LoginActivity"
-            android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,31 +25,26 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".activities.CodeScanActivity"
-            android:screenOrientation="portrait" />
+        <activity android:name=".activities.CodeScanActivity" />
         <activity
             android:name=".activities.UploadGoodsInfoActivity"
-            android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
             android:name=".activities.AddInfoActivity"
-            android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name="me.nereo.multi_image_selector.MultiImageSelectorActivity"
-            android:configChanges="orientation|screenSize"
-            android:screenOrientation="portrait" />
+            android:configChanges="orientation|screenSize" />
         <activity android:name=".activities.MainActivity" />
         <activity
             android:name=".activities.DownLoadGoodsInfoActivity"
-            android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
 
         <service android:name=".services.UpDateTokenService" />
 
         <activity android:name=".activities.ViewDetailActivity" />
-        <activity android:name=".activities.ViewPhotoActivity"></activity>
+        <activity android:name=".activities.ViewPhotoActivity" />
+        <activity android:name=".activities.HomeActivity"></activity>
     </application>
 
 </manifest>

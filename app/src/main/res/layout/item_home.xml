@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tv_module_name"
+    android:layout_width="match_parent"
+    android:layout_height="120dp"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
+    android:clickable="true"
+    android:drawableTop="@drawable/icon_module1_selector"
+    android:gravity="center"
+    android:textSize="12sp"
+    android:text="模块1"
+    android:textColor="@color/txt_module_selector">
+
+
+    <!--<TextView-->
+    <!--android:id="@+id/tv_module_name"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:drawableTop="@drawable/icon_module1"-->
+    <!--android:gravity="center"-->
+    <!--android:drawablePadding="3dp"-->
+    <!--android:text="模块1" />-->
+
+</TextView>

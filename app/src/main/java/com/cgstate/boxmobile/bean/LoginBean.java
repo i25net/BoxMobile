@@ -1,5 +1,7 @@
 package com.cgstate.boxmobile.bean;
 
+import java.io.Serializable;
+
 /**
  * Created by Administrator on 2017/2/20.
  */
@@ -24,7 +26,7 @@ public class LoginBean {
                 '}';
     }
 
-    public static class DataBean {
+    public static class DataBean implements Serializable {
         /**
          * token : 27f6c8a20bfc47e3939209ff4ca87b09
          * expired_in : 600

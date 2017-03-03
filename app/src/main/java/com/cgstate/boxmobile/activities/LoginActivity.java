@@ -1,6 +1,7 @@
 package com.cgstate.boxmobile.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.view.View;
@@ -162,7 +163,16 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                             return;
                         }
                     }
-                    openAnotherActivity(MainActivity.class, FINISH_THIS_ACTIVITY);
+//                    openAnotherActivity(MainActivity.class, FINISH_THIS_ACTIVITY);
+//                    openAnotherActivity(HomeActivity.class, FINISH_THIS_ACTIVITY);
+
+                    Intent intent = new Intent(mContext,HomeActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("login",data);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                    finish();
+
                 }
             }
         }
