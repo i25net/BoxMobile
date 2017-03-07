@@ -10,6 +10,7 @@ import com.cgstate.boxmobile.R;
 import com.cgstate.boxmobile.global.Constant;
 import com.cgstate.boxmobile.utils.DensityUtils;
 import com.cgstate.boxmobile.viewholder.OKDetailViewHolder;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -54,7 +55,17 @@ public class MyOKViewAdapter extends RecyclerView.Adapter {
                     .load(Constant.BASE_URL + imgUrls.get(position))
                     .centerCrop()
                     .resize(DensityUtils.dip2px(80, mContext), DensityUtils.dip2px(80, mContext))
-                    .into(okDetailViewHolder.ivDetailShow);
+                    .into(okDetailViewHolder.ivDetailShow, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            okDetailViewHolder.pbLoading.setVisibility(View.GONE);
+                        }
+
+                        @Override
+                        public void onError() {
+                            okDetailViewHolder.pbLoading.setVisibility(View.GONE);
+                        }
+                    });
 
             okDetailViewHolder.rlShowBigPic.setOnClickListener(new View.OnClickListener() {
                 @Override

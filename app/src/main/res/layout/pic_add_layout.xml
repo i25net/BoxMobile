@@ -4,7 +4,6 @@
     android:layout_width="100dp"
     android:layout_height="100dp"
     android:layout_margin="6dp"
-    android:background="@drawable/data_background"
     android:orientation="vertical">
 
     <ImageView

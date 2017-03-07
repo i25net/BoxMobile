@@ -30,7 +30,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_login2);
 
         initViews();
     }
@@ -166,9 +166,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 //                    openAnotherActivity(MainActivity.class, FINISH_THIS_ACTIVITY);
 //                    openAnotherActivity(HomeActivity.class, FINISH_THIS_ACTIVITY);
 
-                    Intent intent = new Intent(mContext,HomeActivity.class);
+                    Intent intent = new Intent(mContext, HomeActivity.class);
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable("login",data);
+                    bundle.putSerializable("login", data);
                     intent.putExtras(bundle);
                     startActivity(intent);
                     finish();

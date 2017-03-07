@@ -3,7 +3,6 @@
     android:id="@+id/rl_add_data"
     android:layout_width="match_parent"
     android:layout_height="50dp"
-    android:background="@color/colorPrimaryDarkTrans"
     android:layout_margin="8dp">
 
     <ImageView

@@ -19,9 +19,7 @@
             android:layout_height="80dp"
             android:layout_gravity="center"
             android:layout_marginLeft="3dp"
-            android:background="@drawable/data_background"
-            android:padding="6dp"
-            android:src="@drawable/box_logo" />
+            android:padding="6dp" />
         <!--"goods_name":"xxx",           //物品名称-->
         <!--"goods_weight":"xxx",         //物品重量-->
         <!--"goods_color":"xxx",          //物品颜色-->
@@ -34,7 +32,6 @@
             android:layout_marginLeft="5dp"
             android:layout_marginTop="2dp"
             android:layout_weight="1"
-            android:background="@drawable/data_background"
             android:orientation="vertical"
             android:padding="3dp">
 
@@ -149,6 +146,10 @@
 
             </LinearLayout>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@android:color/darker_gray" />
         </LinearLayout>
 
 
@@ -165,8 +166,8 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginBottom="5dp"
-                android:background="@drawable/data_background"
                 android:clickable="true"
+                android:background="@drawable/data_background"
                 android:src="@drawable/icon_edit" />
 
 
@@ -195,5 +196,5 @@
         android:layout_height="1dp"
         android:layout_alignParentBottom="true"
         android:layout_marginTop="2dp"
-        android:background="@color/material_blue_700" />
+        android:background="@color/colorPrimaryDark" />
 </LinearLayout>

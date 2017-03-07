@@ -11,12 +11,20 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="20dp">
 
         <com.cgstate.boxmobile.view.ViewPagerFixed
             android:id="@+id/vp_big_show"
             android:layout_width="match_parent"
             android:layout_height="match_parent"></com.cgstate.boxmobile.view.ViewPagerFixed>
+
+        <ProgressBar
+            android:id="@+id/pb_loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true" />
 
     </RelativeLayout>
 

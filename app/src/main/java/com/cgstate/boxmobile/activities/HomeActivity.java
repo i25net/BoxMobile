@@ -1,8 +1,10 @@
 package com.cgstate.boxmobile.activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -17,6 +19,7 @@ import com.cgstate.boxmobile.bean.HomeModuleEntity;
 import com.cgstate.boxmobile.bean.LoginBean;
 import com.cgstate.boxmobile.impl.OnItemClickListener;
 import com.cgstate.boxmobile.utils.DensityUtils;
+import com.cgstate.boxmobile.utils.PrefUtils;
 import com.cgstate.boxmobile.view.MyItemDecoration;
 
 import java.util.ArrayList;
@@ -24,7 +27,7 @@ import java.util.Random;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class HomeActivity extends BaseActivity implements OnItemClickListener {
+public class HomeActivity extends BaseActivity implements OnItemClickListener, View.OnClickListener {
     private CircleImageView iconImage;
     private TextView tvShanghuMingcheng;
     private TextView tvShanghuMiaoshu;
@@ -36,6 +39,8 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener {
             R.drawable.ic_random1_selector,
             R.drawable.ic_random2_selector,
             R.drawable.ic_random3_selector};
+    private TextView btnExitLogin;
+    private ArrayList<Class> clazzList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +94,11 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener {
      * rv添加数据
      */
     private void initData() {
+
+        clazzList = new ArrayList<>();
+        clazzList.add(UploadGoodsInfoActivity.class);//第一个
+        clazzList.add(DownLoadGoodsInfoActivity.class);//第二个
+
         mDatas = new ArrayList<>();
 
         HomeModuleEntity module1 = new HomeModuleEntity("上传图文信息", R.drawable.icon_module1_selector);
@@ -115,13 +125,10 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener {
     private void initRecyclerViewDivider() {
 
         rvHome.setLayoutManager(new GridLayoutManager(mContext, 3, GridLayoutManager.VERTICAL, false));
-
-
         //dp转换px
         int offset = DensityUtils.dip2px(1.3f, mContext);
 
         rvHome.addItemDecoration(new MyItemDecoration(offset));
-
 
     }
 
@@ -131,20 +138,44 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener {
         tvShanghuMingcheng = (TextView) findViewById(R.id.tv_shanghu_mingcheng);
         tvShanghuMiaoshu = (TextView) findViewById(R.id.tv_shanghu_miaoshu);
         rvHome = (RecyclerView) findViewById(R.id.rv_home);
+        btnExitLogin = (TextView) findViewById(R.id.btn_exit_login);
+        btnExitLogin.setOnClickListener(this);
     }
 
     @Override
     public void onItemClick(int position) {
-        switch (position) {
-            case 0:
-                openAnotherActivity(UploadGoodsInfoActivity.class);
-                break;
-            case 1:
-                openAnotherActivity(DownLoadGoodsInfoActivity.class);
+        if (position < clazzList.size()) {
+            openAnotherActivity(clazzList.get(position));
+        } else {
+            showMyCustomToast("该模块暂未开放");
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn_exit_login:
+                exitLogin();
                 break;
         }
     }
 
+    private void exitLogin() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setTitle("提示");
+        builder.setMessage("是否要退出当前登陆账号？");
+        builder.setNegativeButton("取消", null);
+        builder.setPositiveButton("退出", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                MyApplication.stopService();//停止服务
+                PrefUtils.setBoolean(mContext, "isSavedLoginInfo", false);
+                openAnotherActivity(LoginActivity.class, FINISH_THIS_ACTIVITY);
+            }
+        });
+        builder.show();
+
+    }
 
 
     class HomeDataAdapter extends RecyclerView.Adapter {

@@ -10,16 +10,18 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.cgstate.boxmobile.R;
 import com.cgstate.boxmobile.global.Constant;
 import com.cgstate.boxmobile.view.ViewPagerFixed;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
 import uk.co.senab.photoview.PhotoView;
-import uk.co.senab.photoview.PhotoViewAttacher;
 
 public class ViewPhotoActivity extends BaseActivity {
 
@@ -27,6 +29,7 @@ public class ViewPhotoActivity extends BaseActivity {
 
     private ArrayList<String> imgUrls;
     private ViewPagerFixed mViewPager;
+    private ProgressBar pbLoading;
     private int pos;
 
     @Override
@@ -88,15 +91,12 @@ public class ViewPhotoActivity extends BaseActivity {
 
 
         mViewPager = (ViewPagerFixed) findViewById(R.id.vp_big_show);
-
+        pbLoading = (ProgressBar) findViewById(R.id.pb_loading);
 
     }
 
 
     class MyViewPagerAdapter extends PagerAdapter {
-
-
-        private PhotoViewAttacher photoViewAttacher;
 
         public MyViewPagerAdapter() {
         }
@@ -120,9 +120,19 @@ public class ViewPhotoActivity extends BaseActivity {
             Picasso.with(mContext)
                     .load(Constant.BASE_URL + imgURL)
                     .config(Bitmap.Config.RGB_565)
-                    .placeholder(R.drawable.custom_progress)
-                    .into(photoView);
+                    .fit()
+                    .memoryPolicy(MemoryPolicy.NO_CACHE,MemoryPolicy.NO_STORE)
+                    .into(photoView, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            pbLoading.setVisibility(View.GONE);
+                        }
 
+                        @Override
+                        public void onError() {
+                            pbLoading.setVisibility(View.GONE);
+                        }
+                    });
 
 
             container.addView(photoView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);

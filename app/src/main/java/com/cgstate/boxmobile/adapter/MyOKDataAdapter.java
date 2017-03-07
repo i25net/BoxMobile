@@ -14,6 +14,7 @@ import com.cgstate.boxmobile.bean.GoodsBean;
 import com.cgstate.boxmobile.global.Constant;
 import com.cgstate.boxmobile.utils.DensityUtils;
 import com.cgstate.boxmobile.viewholder.OKViewHolder;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -51,25 +52,36 @@ public class MyOKDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
-        OKViewHolder okViewHolder = (OKViewHolder) holder;
+        final OKViewHolder okViewHolder = (OKViewHolder) holder;
         okViewHolder.tvName.setText(mDatas.get(position).goods_name);
         okViewHolder.tvWeight.setText(mDatas.get(position).goods_weight);
         okViewHolder.tvColor.setText(mDatas.get(position).goods_color);
         okViewHolder.tvMemo.setText(mDatas.get(position).goods_memo);
+
         Picasso.with(mContext)
 //                .load(Constant.BASE_URL + mDatas.get(position).img_url[0] + "&token=" + Constant.TOKEN)
                 .load(Constant.BASE_URL + mDatas.get(position).img_url[0])
                 .centerCrop()
                 .resize(DensityUtils.dip2px(80, mContext), DensityUtils.dip2px(80, mContext))
-                .into((okViewHolder).ivPic);
+                .into((okViewHolder).ivPic, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        okViewHolder.pbLoading.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onError() {
+                        okViewHolder.pbLoading.setVisibility(View.GONE);
+                    }
+                });
 
 
         okViewHolder.llViewDetail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, ViewDetailActivity.class);
-                Bundle bundle =new Bundle();
-                bundle.putSerializable("detail",mDatas.get(position));
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("detail", mDatas.get(position));
                 intent.putExtras(bundle);
                 mContext.startActivity(intent);
             }
