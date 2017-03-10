@@ -203,7 +203,7 @@ public class UploadGoodsInfoActivity extends BaseActivity implements View.OnClic
             MultipartBody.Part barcode = MultipartBody.Part.createFormData("barcode", barcodeResult);
             MultipartBody.Part description = MultipartBody.Part.createFormData("description", dataBean.toString());
 
-            MyRetrofitClient.getInstance(mContext).getApiControl()
+            MyRetrofitClient.getInstance().getApiControl()
                     .uploadInfoLoop(dev_id, barcode, description, photoMap)
                     .compose(Constant.OBSERVABLE_TRANSFORMER)
                     .subscribe(new ApiSubscriber<BaseBean>(mContext, false) {
@@ -353,7 +353,7 @@ public class UploadGoodsInfoActivity extends BaseActivity implements View.OnClic
      */
 
     public void initData() {
-        MyRetrofitClient.getInstance(mContext).getApiControl().getDeviceInfo()
+        MyRetrofitClient.getInstance().getApiControl().getDeviceInfo()
                 .compose(Constant.OBSERVABLE_TRANSFORMER)
                 .subscribe(new ApiSubscriber<DeviceBean>(mContext) {
                     @Override

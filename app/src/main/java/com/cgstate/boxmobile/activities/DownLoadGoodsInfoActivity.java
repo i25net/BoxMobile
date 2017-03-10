@@ -129,7 +129,7 @@ public class DownLoadGoodsInfoActivity extends BaseActivity implements View.OnCl
     private void getBarCodeInfoMethod() {
         HashMap<String, String> params = new HashMap<>();
         params.put("barcode", getEditTextString(etBarCode));
-        MyRetrofitClient.getInstance(mContext).getApiControl()
+        MyRetrofitClient.getInstance().getApiControl()
                 .getBarCodeInfoContainDatas(params)
                 .compose(Constant.OBSERVABLE_TRANSFORMER)
                 .subscribe(new ApiSubscriber<GoodsBean>(mContext) {
@@ -210,7 +210,7 @@ public class DownLoadGoodsInfoActivity extends BaseActivity implements View.OnCl
      */
 
     private void initData() {
-        MyRetrofitClient.getInstance(mContext).getApiControl().getDeviceInfo()
+        MyRetrofitClient.getInstance().getApiControl().getDeviceInfo()
                 .compose(Constant.OBSERVABLE_TRANSFORMER)
                 .subscribe(new ApiSubscriber<DeviceBean>(mContext) {
                     @Override

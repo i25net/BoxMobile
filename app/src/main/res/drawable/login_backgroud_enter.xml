@@ -3,21 +3,37 @@
 
     <item>
         <shape android:shape="rectangle">
-            <solid android:color="@color/colorPrimaryDarkTrans" />
-            <corners android:radius="19dp" />
+            <!--<solid android:color="@color/colorPrimaryDarkTrans" />-->
+            <corners
+                android:bottomLeftRadius="19dp"
+                android:bottomRightRadius="19dp"
+                android:topLeftRadius="19dp"
+                android:topRightRadius="19dp" />
+            <gradient
+                android:angle="270"
+                android:endColor="#0F000000"
+                android:startColor="#0F000000" />
         </shape>
     </item>
 
-    <item android:bottom="3px" android:right="3px" android:left="3px">
+    <item
+        android:bottom="2dp"
+        android:left="1dp"
+        android:right="2dp">
         <shape android:shape="rectangle">
             <solid android:color="@color/colorWhite" />
             <!--<padding-->
-                <!--android:bottom="3dp"-->
-                <!--android:left="5dp"-->
-                <!--android:right="5dp"-->
-                <!--android:top="3dp" />-->
-            <corners android:radius="19dp" />
+            <!--android:bottom="3dp"-->
+            <!--android:left="5dp"-->
+            <!--android:right="5dp"-->
+            <!--android:top="3dp" />-->
+            <corners
+                android:bottomLeftRadius="19dp"
+                android:bottomRightRadius="19dp"
+                android:topLeftRadius="19dp"
+                android:topRightRadius="19dp" />
         </shape>
     </item>
+
 
 </layer-list>

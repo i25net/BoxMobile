@@ -26,7 +26,7 @@ public class LoginUtils {
         loginMap.put("account", username);
         loginMap.put("password", password);
 
-        MyRetrofitClient.getInstance(mContext)
+        MyRetrofitClient.getInstance()
                 .getApiControl()
                 .accountLogin(loginMap)
                 .compose(Constant.OBSERVABLE_TRANSFORMER)

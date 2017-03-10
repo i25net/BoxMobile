@@ -33,7 +33,6 @@ public abstract class ApiSubscriber<T> extends Subscriber<T> {
         this.showDialog = showDialog;
     }
 
-
     @Override
     public void onStart() {
 
@@ -50,8 +49,14 @@ public abstract class ApiSubscriber<T> extends Subscriber<T> {
             attributes.height = WindowManager.LayoutParams.WRAP_CONTENT;
             window.setAttributes(attributes);
             alertDialog.setCancelable(false);
+            //取消当前加载网络的话,直接解除绑定
+//            alertDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+//                @Override
+//                public void onCancel(DialogInterface dialog) {
+//                    unsubscribe();
+//                }
+//            });
         }
-
 
     }
 

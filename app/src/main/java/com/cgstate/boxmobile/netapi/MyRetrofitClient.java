@@ -1,6 +1,5 @@
 package com.cgstate.boxmobile.netapi;
 
-import android.content.Context;
 import android.text.TextUtils;
 
 import com.cgstate.boxmobile.global.Constant;
@@ -25,36 +24,28 @@ public class MyRetrofitClient {
 
     public static String baseUrl = Constant.BASE_URL;
 
-    private static Context mContext;
-
-
     private static MyRetrofitClient sNewInstance;
 
     private static class SingletonHolder {
-        private static MyRetrofitClient INSTANCE = new MyRetrofitClient(mContext);
+        private static MyRetrofitClient INSTANCE = new MyRetrofitClient();
     }
 
-    public static MyRetrofitClient getInstance(Context context) {
-        if (context != null) {
-            mContext = context;
-        }
+    public static MyRetrofitClient getInstance() {
+
         return SingletonHolder.INSTANCE;
     }
 
-    public static MyRetrofitClient getInstance(Context context, String url) {
-        if (context != null) {
-            mContext = context;
-        }
-        sNewInstance = new MyRetrofitClient(context, url);
+    public static MyRetrofitClient getInstance(String url) {
+        sNewInstance = new MyRetrofitClient(url);
         return sNewInstance;
     }
 
-    private MyRetrofitClient(Context context) {
-        this(context, null);
+    private MyRetrofitClient() {
+        this(null);
     }
 
 
-    private MyRetrofitClient(Context context, String url) {
+    private MyRetrofitClient(String url) {
 
         if (TextUtils.isEmpty(url)) {
             url = baseUrl;

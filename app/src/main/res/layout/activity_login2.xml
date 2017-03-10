@@ -47,7 +47,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="30dp"
         android:background="@drawable/login_backgroud_enter"
         android:orientation="vertical"
         android:padding="20dp">

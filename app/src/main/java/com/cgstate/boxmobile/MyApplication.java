@@ -24,7 +24,7 @@ public class MyApplication extends Application {
         super.onCreate();
         mContext = getApplicationContext();
         service = new Intent(mContext, UpDateTokenService.class);
-        OkHttpClient picassoClient = MyRetrofitClient.getInstance(mContext).getOkHttpClient();
+        OkHttpClient picassoClient = MyRetrofitClient.getInstance().getOkHttpClient();
         final Picasso picasso = new Picasso.Builder(mContext).downloader(new OkHttp3Downloader(picassoClient)).build();
         picasso.setIndicatorsEnabled(true);
         Picasso.setSingletonInstance(picasso);
