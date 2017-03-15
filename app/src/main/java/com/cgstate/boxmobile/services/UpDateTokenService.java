@@ -9,11 +9,14 @@ import android.os.Message;
 import android.util.Log;
 
 import com.cgstate.boxmobile.MyApplication;
+import com.cgstate.boxmobile.global.Constant;
 import com.cgstate.boxmobile.utils.CheckTokenExpired;
 
 public class UpDateTokenService extends Service {
 
     private Context mContext;
+
+    private int checkTimeDelay = Constant.CHECK_TIME_DELAY;
 
     public UpDateTokenService() {
     }
@@ -34,7 +37,7 @@ public class UpDateTokenService extends Service {
     }
 
     private void checkToken() {
-        mHandler.postDelayed(checkTokenRunnable, 1000);
+        mHandler.postDelayed(checkTokenRunnable, checkTimeDelay);
     }
 
 
@@ -61,7 +64,7 @@ public class UpDateTokenService extends Service {
                 CheckTokenExpired.login(mContext);
                 return;
             }
-            mHandler.postDelayed(checkTokenRunnable, 1000);
+            mHandler.postDelayed(checkTokenRunnable, checkTimeDelay);
         }
     };
 

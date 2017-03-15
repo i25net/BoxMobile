@@ -48,9 +48,10 @@ public class Constant {
     };
 
 
-    public final static long CONNECT_TIMEOUT = 10000;//连接超时时间,单位毫秒
+    public final static long CONNECT_TIMEOUT = 20000;//连接超时时间,单位毫秒
     public final static long READ_TIMEOUT = 10000;//读取超时时间,单位毫秒
-    public final static long WRITE_TIMEOUT = 1000000;//写的超时时间,单位毫秒
+    public final static long WRITE_TIMEOUT = 10000000;//写的超时时间,单位毫秒
 
     public final static int UPLOAD_FILES_LIMIT_NUMBERS = 6;
+    public static int CHECK_TIME_DELAY = 210000;//轮询检查过期时间
 }

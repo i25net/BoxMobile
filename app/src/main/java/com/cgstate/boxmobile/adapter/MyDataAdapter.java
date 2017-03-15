@@ -20,7 +20,7 @@ import com.cgstate.boxmobile.viewholder.EmptyViewHolder;
 import com.cgstate.boxmobile.viewholder.ShowViewHolder;
 import com.squareup.picasso.Picasso;
 
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Created by Administrator on 2017/2/20.
@@ -32,15 +32,16 @@ public class MyDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private static final int empty = -1;
     private Context mContext;
 
-    public List<GoodsBean.DataBean> getData() {
+
+    public ArrayList<GoodsBean.DataBean> getData() {
         return mDatas;
     }
 
-    public void setData(List<GoodsBean.DataBean> goodss) {
+    public void setData(ArrayList<GoodsBean.DataBean> goodss) {
         this.mDatas = goodss;
     }
 
-    private List<GoodsBean.DataBean> mDatas;
+    private ArrayList<GoodsBean.DataBean> mDatas;
 
     public MyDataAdapter(GoodsBean goodsBean, Context mContext) {
         if (goodsBean != null) {
@@ -84,6 +85,11 @@ public class MyDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
             final int pos = holder.getLayoutPosition();
 
+
+            ((ShowViewHolder) holder).progressBar.setMax(mDatas.get(pos).maxProgress);
+            ((ShowViewHolder) holder).progressBar.setProgress(mDatas.get(pos).progress);
+
+
             ((ShowViewHolder) holder).btnDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -118,7 +124,6 @@ public class MyDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                     ((UploadGoodsInfoActivity) mContext).startActivityForResult(intent, Constant.GOODS_INFO_EDIT_REQUEST_CODE);
                 }
             });
-
 
         }
     }

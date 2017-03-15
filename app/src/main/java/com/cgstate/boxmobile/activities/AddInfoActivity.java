@@ -108,8 +108,12 @@ public class AddInfoActivity extends BaseActivity implements View.OnClickListene
 
         mRecyclerView = (RecyclerView) findViewById(R.id.rv_select);
 
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(mContext, 3);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(mContext, 3,GridLayoutManager.VERTICAL,false);
         mRecyclerView.setLayoutManager(gridLayoutManager);
+
+//        mRecyclerView.addItemDecoration(new SpaceItemDecoration(10));
+
+
         selectPicAdapter = new SelectPicAdapter(mContext);
         mRecyclerView.setAdapter(selectPicAdapter);
     }

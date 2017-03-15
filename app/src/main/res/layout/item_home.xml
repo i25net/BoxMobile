@@ -2,15 +2,14 @@
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/tv_module_name"
     android:layout_width="match_parent"
-    android:layout_height="120dp"
-    android:paddingTop="10dp"
-    android:paddingBottom="10dp"
+    android:layout_height="wrap_content"
     android:clickable="true"
     android:drawableTop="@drawable/icon_module1_selector"
     android:gravity="center"
-    android:textSize="12sp"
+    android:padding="18dp"
     android:text="模块1"
-    android:textColor="@color/txt_module_selector">
+    android:textColor="@color/txt_module_selector"
+    android:textSize="12sp">
 
 
     <!--<TextView-->

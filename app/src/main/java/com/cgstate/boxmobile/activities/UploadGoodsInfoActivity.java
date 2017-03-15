@@ -9,12 +9,14 @@ import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.cgstate.boxmobile.R;
@@ -29,12 +31,10 @@ import com.cgstate.boxmobile.netapi.MyListenter;
 import com.cgstate.boxmobile.netapi.MyRetrofitClient;
 import com.cgstate.boxmobile.netapi.ProgressRequestBody;
 import com.cgstate.boxmobile.utils.GoToLoginActivity;
-import com.cgstate.boxmobile.viewholder.ShowViewHolder;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -55,7 +55,7 @@ public class UploadGoodsInfoActivity extends BaseActivity implements View.OnClic
     private ArrayAdapter<String> arrayAdapter;
     private MyDataAdapter myDataAdapter;
     private TextView btnUploadGoodsInfo;
-
+    private ProgressBar pbUploading;
     private String mSelectedDeviceId;
     private String barcodeResult;
 
@@ -71,7 +71,9 @@ public class UploadGoodsInfoActivity extends BaseActivity implements View.OnClic
     @Override
     protected void onResume() {
         super.onResume();
-        initData();
+        if (checkEmpty(mSelectedDeviceId)) {
+            initData();
+        }
     }
 
     private void initViews() {
@@ -89,6 +91,9 @@ public class UploadGoodsInfoActivity extends BaseActivity implements View.OnClic
             supportActionBar.setDisplayHomeAsUpEnabled(true);
         }
 
+
+        pbUploading = (ProgressBar) findViewById(R.id.pb_uploading);
+
         mRecyclerView = (RecyclerView) findViewById(R.id.rv_data);
         btnUploadGoodsInfo = (TextView) findViewById(R.id.btn_uploadGoodInfo);
         btnUploadGoodsInfo.setOnClickListener(this);
@@ -100,6 +105,7 @@ public class UploadGoodsInfoActivity extends BaseActivity implements View.OnClic
 
         mRecyclerView.setAdapter(myDataAdapter);
 
+//        mRecyclerView.setItemAnimator(null);
 
         mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
@@ -116,7 +122,6 @@ public class UploadGoodsInfoActivity extends BaseActivity implements View.OnClic
 
             }
         });
-
     }
 
     @Override
@@ -144,78 +149,82 @@ public class UploadGoodsInfoActivity extends BaseActivity implements View.OnClic
             showMyCustomToast("请先输入条码信息");
             return;
         }
-
-//        if (CheckTokenExpired.isExpired()) {
-//            CheckTokenExpired.login(mContext);
-//            showMyCustomToast("会话已超时,正在自动登陆");
-//            new Handler().postDelayed(new Runnable() {
-//                @Override
-//                public void run() {
         uploadGoodsInfo();
-//                }
-//            }, 3000);
-//        } else {
-//            uploadGoodsInfo();
-//        }
     }
 
+
+    private int uploadIndex = 0;
 
     /**
      * 上传物品信息
      */
     private void uploadGoodsInfo() {
 
+
         barcodeResult = getEditTextString(etBarCode);
 
-        List<GoodsBean.DataBean> data = myDataAdapter.getData();
+        ArrayList<GoodsBean.DataBean> data = myDataAdapter.getData();
 
-        for (int i = 0; i < data.size(); i++) {
+        GoodsBean.DataBean dataBean = data.get(uploadIndex);
 
-            MyObj myObj = new MyObj();
+        MyObj myObj = new MyObj();
 
-            GoodsBean.DataBean dataBean = data.get(i);
+        HashMap<String, RequestBody> photoMap = new HashMap<>();
 
-            HashMap<String, RequestBody> photoMap = new HashMap<>();
+        for (int k = 0; k < dataBean.img_url.length; k++) {
 
-            for (int k = 0; k < dataBean.img_url.length; k++) {
-
-                File file = new File(dataBean.img_url[k]);
+            File file = new File(dataBean.img_url[k]);
 
 //                UploadFileRequestBody uploadFileRequestBody = new UploadFileRequestBody(file, new DefaultProgressListener(mHandler, i));
-                int index = i;
-                int definiteNumber = k;
-                int totalUpLoadImagesNumber = dataBean.img_url.length;
 
-                ProgressRequestBody uploadFileRequestBody =
-                        new ProgressRequestBody(
-                                RequestBody.create(MediaType.parse("multipart/form-data"), file),
-                                new MyListenter(
-                                        mHandler,
-                                        index,
-                                        totalUpLoadImagesNumber,
-                                        definiteNumber, myObj));
-                photoMap.put("photos" + i + "\"; filename=\"" + file.getName(), uploadFileRequestBody);
-                photoMap.put(file.getName(), uploadFileRequestBody);
-            }
+            int index = uploadIndex;
+            int definiteNumber = k;
+            int totalUpLoadImagesNumber = dataBean.img_url.length;
 
-
-            MultipartBody.Part dev_id = MultipartBody.Part.createFormData("dev_id", mSelectedDeviceId);
-            MultipartBody.Part barcode = MultipartBody.Part.createFormData("barcode", barcodeResult);
-            MultipartBody.Part description = MultipartBody.Part.createFormData("description", dataBean.toString());
-
-            MyRetrofitClient.getInstance().getApiControl()
-                    .uploadInfoLoop(dev_id, barcode, description, photoMap)
-                    .compose(Constant.OBSERVABLE_TRANSFORMER)
-                    .subscribe(new ApiSubscriber<BaseBean>(mContext, false) {
-                        @Override
-                        protected void doSomething(BaseBean bean) {
-                            processUpLoadData(bean);
-                        }
-                    });
+            ProgressRequestBody uploadFileRequestBody =
+                    new ProgressRequestBody(
+                            RequestBody.create(MediaType.parse("multipart/form-data"), file),
+                            new MyListenter(
+                                    mHandler,
+                                    index,
+                                    totalUpLoadImagesNumber,
+                                    definiteNumber, myObj));
+            photoMap.put("photos" + uploadIndex + "\"; filename=\"" + file.getName(), uploadFileRequestBody);
+            photoMap.put(file.getName(), uploadFileRequestBody);
         }
+
+
+        MultipartBody.Part dev_id = MultipartBody.Part.createFormData("dev_id", mSelectedDeviceId);
+        MultipartBody.Part barcode = MultipartBody.Part.createFormData("barcode", barcodeResult);
+        MultipartBody.Part description = MultipartBody.Part.createFormData("description", dataBean.toString());
+
+        MyRetrofitClient.getInstance().getApiControl()
+                .uploadInfoLoop(dev_id, barcode, description, photoMap)
+                .compose(Constant.OBSERVABLE_TRANSFORMER)
+                .subscribe(new ApiSubscriber<BaseBean>(mContext, false) {
+
+                    @Override
+                    public void onStart() {
+                        super.onStart();
+                        pbUploading.setVisibility(View.VISIBLE);
+
+                    }
+
+                    @Override
+                    protected void doSomething(BaseBean bean) {
+                        processUpLoadData(bean);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        pbUploading.setVisibility(View.INVISIBLE);
+                        showMyCustomToast("上传失败,请重新上传!");
+                        return;
+                    }
+                });
     }
 
-    private int totalUpLoadCount;
 
     /**
      * 处理上传数据
@@ -232,8 +241,9 @@ public class UploadGoodsInfoActivity extends BaseActivity implements View.OnClic
                 showMyCustomToast(bean.ErrorMessage);
             }
         } else {//无错误提示
-            totalUpLoadCount++;
-            if (totalUpLoadCount == myDataAdapter.getData().size()) {
+            uploadIndex++;
+            if (uploadIndex == myDataAdapter.getData().size()) {
+                pbUploading.setVisibility(View.VISIBLE);
                 showMyCustomToast("全部图文信息上传成功!");
                 new Handler().postDelayed(new Runnable() {
                     @Override
@@ -241,6 +251,8 @@ public class UploadGoodsInfoActivity extends BaseActivity implements View.OnClic
                         finish();
                     }
                 }, 300);
+            } else {
+                uploadGoodsInfo();
             }
         }
 
@@ -263,13 +275,16 @@ public class UploadGoodsInfoActivity extends BaseActivity implements View.OnClic
 //
 //        );
 
+
         int maxProgress = totalUpLoadImagesNumber * 100;
 
-        View childAt = mRecyclerView.getChildAt(index);
-        RecyclerView.ViewHolder childViewHolder = mRecyclerView.getChildViewHolder(childAt);
-        ShowViewHolder showViewHolder = (ShowViewHolder) childViewHolder;
-        showViewHolder.progressBar.setMax(maxProgress);
-        showViewHolder.progressBar.setProgress(progress);
+        myDataAdapter.getData().get(index).maxProgress = maxProgress;
+
+        myDataAdapter.getData().get(index).progress = progress;
+
+        //保留动画
+//        myDataAdapter.notifyItemChanged(index);
+        myDataAdapter.notifyDataSetChanged();
     }
 
     private Handler mHandler = new Handler() {
@@ -339,6 +354,7 @@ public class UploadGoodsInfoActivity extends BaseActivity implements View.OnClic
      *                      不是-1,为修改内容,index为修改的内容条目索引
      */
     private void fillRecyclerViewWithData(GoodsBean.DataBean goodsDataBean, int index) {
+        Log.d("UploadGoodsInfoActivity", "index:" + index);
         if (index == -1) {
             datas.add(goodsDataBean);
         } else {

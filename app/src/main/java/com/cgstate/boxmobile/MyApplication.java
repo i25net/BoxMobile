@@ -26,7 +26,10 @@ public class MyApplication extends Application {
         service = new Intent(mContext, UpDateTokenService.class);
         OkHttpClient picassoClient = MyRetrofitClient.getInstance().getOkHttpClient();
         final Picasso picasso = new Picasso.Builder(mContext).downloader(new OkHttp3Downloader(picassoClient)).build();
-        picasso.setIndicatorsEnabled(true);
+
+        //Debug模式
+//        picasso.setIndicatorsEnabled(true);
+
         Picasso.setSingletonInstance(picasso);
     }
 
@@ -35,11 +38,11 @@ public class MyApplication extends Application {
     }
 
 
-    public static void startService(){
+    public static void startService() {
         mContext.startService(service);
     }
 
-    public static void stopService(){
+    public static void stopService() {
         mContext.stopService(service);
     }
 }

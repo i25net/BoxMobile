@@ -11,5 +11,5 @@
         android:layout_centerInParent="true"
         android:background="@null"
         android:clickable="false"
-        android:src="@drawable/icon_add" />
+        android:src="@drawable/icon_add2" />
 </RelativeLayout>

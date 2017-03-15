@@ -22,7 +22,7 @@ public class CheckTokenExpired {
 
         if (Constant.EXPIRED_TIME_SECONDS > 0) {
             expiredSeconds = Constant.EXPIRED_TIME_SECONDS * 1000;
-            expiredSeconds = expiredSeconds - 50000;
+            expiredSeconds = expiredSeconds - 10000;
         }
 
         if (Constant.LAST_RIGHT_TIME > 0) {

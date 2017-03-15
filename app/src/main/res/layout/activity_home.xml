@@ -9,7 +9,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="150dp"
-        android:background="@android:color/darker_gray"
+        android:background="@color/colorPrimary"
         android:orientation="horizontal">
 
         <de.hdodenhof.circleimageview.CircleImageView
@@ -19,7 +19,8 @@
             android:layout_centerVertical="true"
             android:layout_gravity="center"
             android:layout_marginLeft="30dp"
-            android:src="@drawable/icon_head" />
+            android:src="@drawable/icon_head"
+            android:visibility="gone" />
 
 
         <LinearLayout
@@ -38,6 +39,7 @@
                 android:layout_gravity="center"
                 android:padding="10dp"
                 android:text="商户名称"
+                android:textColor="@color/colorWhite"
                 android:textSize="22sp" />
 
             <TextView
@@ -46,6 +48,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:padding="10dp"
+                android:textColor="@color/colorWhite"
                 android:text="商户描述"
                 android:textSize="16sp" />
 

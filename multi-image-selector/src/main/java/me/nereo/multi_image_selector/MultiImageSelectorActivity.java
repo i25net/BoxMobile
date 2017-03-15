@@ -55,7 +55,7 @@ public class MultiImageSelectorActivity extends AppCompatActivity
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 //            getWindow().setStatusBarColor(Color.BLACK);
-            getWindow().setStatusBarColor(Color.parseColor("#303F9F"));
+            getWindow().setStatusBarColor(Color.parseColor("#512DA8"));
         }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

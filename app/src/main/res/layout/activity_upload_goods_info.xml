@@ -29,9 +29,9 @@
             android:id="@+id/spinner_select_device"
             android:layout_width="0dp"
             android:layout_height="40dp"
+            android:layout_weight="7"
             android:background="#eee"
-            android:spinnerMode="dialog"
-            android:layout_weight="7"></android.support.v7.widget.AppCompatSpinner>
+            android:spinnerMode="dialog"></android.support.v7.widget.AppCompatSpinner>
 
 
     </LinearLayout>
@@ -70,6 +70,7 @@
                 android:background="@drawable/dialog_background"
                 android:gravity="center"
                 android:inputType="number"
+                android:imeOptions="actionDone"
                 android:singleLine="true"
                 android:textSize="18sp" />
 
@@ -87,20 +88,32 @@
         android:layout_height="1dp"
         android:background="@color/colorPrimaryDarkTrans" />
 
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_data"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"></android.support.v7.widget.RecyclerView>
+        android:layout_weight="1">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_data"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+
+        <ProgressBar
+            android:id="@+id/pb_uploading"
+            android:visibility="invisible"
+            android:indeterminateDrawable="@drawable/custom_progress2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true" />
+    </RelativeLayout>
 
     <TextView
+        android:id="@+id/btn_uploadGoodInfo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="3dp"
         android:layout_marginLeft="4dp"
         android:layout_marginRight="4dp"
-        android:id="@+id/btn_uploadGoodInfo"
         android:background="@drawable/updata_background"
         android:clickable="true"
         android:gravity="center"

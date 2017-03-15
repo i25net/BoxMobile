@@ -2,7 +2,6 @@ package com.cgstate.boxmobile.netapi;
 
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 
 import com.cgstate.boxmobile.bean.MyObj;
 
@@ -34,7 +33,7 @@ public class MyListenter implements ProgressRequestBody.Listener {
 //        Log.d("MyListenter", index + "---hasFinished:" + hasFinished);
 
 
-        Log.d("MyListenter", "index:"+index+"----myObj:" + myObj+"---"+Thread.currentThread().getName()+"----"+Thread.currentThread().getId());
+//        Log.d("MyListenter", "index:"+index+"----myObj:" + myObj+"---"+Thread.currentThread().getName()+"----"+Thread.currentThread().getId());
 
         if (progress > 100) progress = 100;
         if (progress < 0) progress = 0;
@@ -62,7 +61,7 @@ public class MyListenter implements ProgressRequestBody.Listener {
         } else {
             msg.arg2 = totalUpLoadImagesNumber * 100;
         }
-        Log.d("MyListenter", "index:" + index + "---count:" + myObj.getCount());
+//        Log.d("MyListenter", "index:" + index + "---count:" + myObj.getCount());
 
         mHandler.sendMessage(msg);
 

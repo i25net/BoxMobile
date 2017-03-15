@@ -1,7 +1,7 @@
 package com.cgstate.boxmobile.bean;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Created by Administrator on 2017/2/20.
@@ -14,7 +14,7 @@ public class GoodsBean {
     public String ErrorCode;
     public String ErrorMessage;
     public String SuccessMessage;
-    public List<DataBean> data;
+    public ArrayList<DataBean> data;
 
     public static class DataBean implements Serializable {
         /**
@@ -34,6 +34,9 @@ public class GoodsBean {
         public String goods_weight;
         public String goods_color;
         public String goods_memo;
+
+        public int progress;
+        public int maxProgress;
 
         @Override
         public String toString() {

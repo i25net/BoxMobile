@@ -8,9 +8,13 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.cgstate.boxmobile.MyApplication;
@@ -23,7 +27,6 @@ import com.cgstate.boxmobile.utils.PrefUtils;
 import com.cgstate.boxmobile.view.MyItemDecoration;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -33,6 +36,7 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener, V
     private TextView tvShanghuMiaoshu;
     private RecyclerView rvHome;
     private ArrayList<HomeModuleEntity> mDatas;
+    private int width;
 
     private int[] backGrounds = {R.drawable.icon_module3_selector,
             R.drawable.icon_module4_selector,
@@ -41,17 +45,25 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener, V
             R.drawable.ic_random3_selector};
     private TextView btnExitLogin;
     private ArrayList<Class> clazzList;
+    private GridLayoutManager gridLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        initDisplay();
         initService();
         initViews();
         initTitleData();
         initRecyclerViewDivider();
         initData();
         getDisplay();
+    }
+
+    private void initDisplay() {
+        WindowManager wm = this.getWindowManager();
+
+        width = wm.getDefaultDisplay().getWidth();
     }
 
     public void getDisplay() {
@@ -103,14 +115,16 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener, V
 
         HomeModuleEntity module1 = new HomeModuleEntity("上传图文信息", R.drawable.icon_module1_selector);
         HomeModuleEntity module2 = new HomeModuleEntity("查看图闻信息", R.drawable.icon_module2_selector);
+        HomeModuleEntity module3 = new HomeModuleEntity("关于", R.drawable.icon_about_selector);
         mDatas.add(module1);
         mDatas.add(module2);
+        mDatas.add(module3);
 
-        for (int i = 3; i <= 27; i++) {
-            int back = backGrounds[new Random().nextInt(backGrounds.length)];
-            HomeModuleEntity homeModuleEntity = new HomeModuleEntity("模块" + i, back);
-            mDatas.add(homeModuleEntity);
-        }
+//        for (int i = 3; i <= 6; i++) {
+//            int back = backGrounds[new Random().nextInt(backGrounds.length)];
+//            HomeModuleEntity homeModuleEntity = new HomeModuleEntity("模块" + i, back);
+//            mDatas.add(homeModuleEntity);
+//        }
         HomeDataAdapter homeDataAdapter = new HomeDataAdapter();
         rvHome.setAdapter(homeDataAdapter);
 
@@ -123,12 +137,14 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener, V
      * 初始化rv分割线
      */
     private void initRecyclerViewDivider() {
+        gridLayoutManager = new GridLayoutManager(mContext, 3, GridLayoutManager.VERTICAL, false);
 
-        rvHome.setLayoutManager(new GridLayoutManager(mContext, 3, GridLayoutManager.VERTICAL, false));
+        rvHome.setLayoutManager(gridLayoutManager);
         //dp转换px
         int offset = DensityUtils.dip2px(1.3f, mContext);
 
         rvHome.addItemDecoration(new MyItemDecoration(offset));
+
 
     }
 
@@ -190,7 +206,7 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener, V
 
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return new HomeViewHolder(LayoutInflater.from(mContext).inflate(R.layout.item_home, parent, false));
+            return new HomeViewHolder(LayoutInflater.from(mContext).inflate(R.layout.item_home2, parent, false));
         }
 
         @Override
@@ -198,9 +214,13 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener, V
             if (holder instanceof HomeViewHolder) {
                 HomeViewHolder homeViewHolder = (HomeViewHolder) holder;
                 homeViewHolder.tvModuleName.setText(mDatas.get(position).name);
+
+
                 Drawable drawable = mContext.getResources().getDrawable(mDatas.get(position).background);
-                homeViewHolder.tvModuleName.setCompoundDrawablesWithIntrinsicBounds(null, drawable, null, null);
-                homeViewHolder.tvModuleName.setOnClickListener(new View.OnClickListener() {
+                homeViewHolder.ivModuleName.setBackground(drawable);
+
+//                homeViewHolder.tvModuleName.setCompoundDrawablesWithIntrinsicBounds(null, drawable, null, null);
+                homeViewHolder.rlHomeItemContainer.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         onItemClickListener.onItemClick(position);
@@ -217,12 +237,22 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener, V
 
     class HomeViewHolder extends RecyclerView.ViewHolder {
 
+        ImageView ivModuleName;
         TextView tvModuleName;
+        RelativeLayout rlHomeItemContainer;
 
         public HomeViewHolder(View itemView) {
             super(itemView);
-            tvModuleName = (TextView) itemView.findViewById(R.id.tv_module_name);
+            rlHomeItemContainer = (RelativeLayout) itemView.findViewById(R.id.rl_home_container);
+            ivModuleName = (ImageView) itemView.findViewById(R.id.iv_item_home);
+            tvModuleName = (TextView) itemView.findViewById(R.id.tv_item_home);
+            GridLayoutManager.LayoutParams layoutParams = (GridLayoutManager.LayoutParams) rlHomeItemContainer.getLayoutParams();
+            layoutParams.height = width / 3;
+            rlHomeItemContainer.setLayoutParams(layoutParams);
+            rlHomeItemContainer.setGravity(Gravity.CENTER);
+
         }
     }
+
 
 }
