@@ -3,6 +3,8 @@ package com.cgstate.boxmobile;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
+import android.util.Log;
 
 import com.cgstate.boxmobile.netapi.MyRetrofitClient;
 import com.cgstate.boxmobile.services.UpDateTokenService;
@@ -25,10 +27,15 @@ public class MyApplication extends Application {
         mContext = getApplicationContext();
         service = new Intent(mContext, UpDateTokenService.class);
         OkHttpClient picassoClient = MyRetrofitClient.getInstance().getOkHttpClient();
-        final Picasso picasso = new Picasso.Builder(mContext).downloader(new OkHttp3Downloader(picassoClient)).build();
+        final Picasso picasso = new Picasso.Builder(mContext).downloader(new OkHttp3Downloader(picassoClient)).listener(new Picasso.Listener() {
+            @Override
+            public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
+                Log.d("MyApplication", "picasso:" + exception.getMessage());
+            }
+        }).build();
 
         //Debug模式
-//        picasso.setIndicatorsEnabled(true);
+        picasso.setIndicatorsEnabled(true);
 
         Picasso.setSingletonInstance(picasso);
     }

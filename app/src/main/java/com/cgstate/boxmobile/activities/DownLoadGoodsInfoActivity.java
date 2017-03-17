@@ -135,7 +135,11 @@ public class DownLoadGoodsInfoActivity extends BaseActivity implements View.OnCl
                 .subscribe(new ApiSubscriber<GoodsBean>(mContext) {
                     @Override
                     protected void doSomething(GoodsBean goodsBean) {
-                        processGoodsBean(goodsBean);
+                        if(goodsBean.data.size()>0){
+                            processGoodsBean(goodsBean);
+                        }else {
+                            showMyCustomToast("该条形码下无数据!");
+                        }
                     }
                 });
     }
@@ -223,12 +227,9 @@ public class DownLoadGoodsInfoActivity extends BaseActivity implements View.OnCl
     private void processData(DeviceBean deviceBean) {
         if (deviceBean != null) {
             if (deviceBean.IsError) {
-
                 if ("1".equals(deviceBean.ErrorCode)) {
                     GoToLoginActivity.goToLoginActivity(mContext);
                 }
-
-
                 if (!checkEmpty(deviceBean.ErrorMessage)) {
                     showMyCustomToast(deviceBean.ErrorMessage);
                     return;

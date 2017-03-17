@@ -31,6 +31,8 @@ import com.cgstate.boxmobile.netapi.MyListenter;
 import com.cgstate.boxmobile.netapi.MyRetrofitClient;
 import com.cgstate.boxmobile.netapi.ProgressRequestBody;
 import com.cgstate.boxmobile.utils.GoToLoginActivity;
+import com.cgstate.boxmobile.utils.MD5Encoder;
+import com.cgstate.boxmobile.utils.PictureUtil;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -39,6 +41,10 @@ import java.util.HashMap;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import rx.Observable;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 
 /**
@@ -58,6 +64,7 @@ public class UploadGoodsInfoActivity extends BaseActivity implements View.OnClic
     private ProgressBar pbUploading;
     private String mSelectedDeviceId;
     private String barcodeResult;
+    private ArrayList<GoodsBean.DataBean> data;
 
 
     @Override
@@ -152,6 +159,54 @@ public class UploadGoodsInfoActivity extends BaseActivity implements View.OnClic
         uploadGoodsInfo();
     }
 
+    class TempObject {
+        public GoodsBean.DataBean dataBean;
+        public ArrayList<String> newFileLists;
+
+        public TempObject(GoodsBean.DataBean dataBean, ArrayList<String> newFileLists) {
+            this.dataBean = dataBean;
+            this.newFileLists = newFileLists;
+        }
+    }
+
+    /**
+     * 返回压缩好的图片集合
+     * 键值对,键为原始databean信息,值为压缩后的图片位置集合
+     *
+     * @param dataBean
+     * @return
+     */
+
+
+    private TempObject compressImg(GoodsBean.DataBean dataBean) {
+
+
+        String destFileUrl = getExternalCacheDir().getAbsolutePath() + "/";
+
+        ArrayList<String> newCompressFileUrlList = new ArrayList<>();
+
+
+        for (int i = 0; i < dataBean.img_url.length; i++) {
+
+            String srcFileUrl = dataBean.img_url[i];
+
+            String newCompressFileUrl = destFileUrl + MD5Encoder.encode(srcFileUrl) + ".jpg";
+
+            boolean ok = PictureUtil.compressAndSave2(srcFileUrl, newCompressFileUrl, 800);
+
+            if (ok) {
+                newCompressFileUrlList.add(newCompressFileUrl);
+            }
+        }
+
+        for (int i = 0; i < newCompressFileUrlList.size(); i++) {
+            Log.d("UploadGoodsInfoActivity", "newCompressFileUrlList:-----" + newCompressFileUrlList.get(i));
+        }
+
+        TempObject tempObject = new TempObject(dataBean, newCompressFileUrlList);
+
+        return tempObject;
+    }
 
     private int uploadIndex = 0;
 
@@ -159,27 +214,67 @@ public class UploadGoodsInfoActivity extends BaseActivity implements View.OnClic
      * 上传物品信息
      */
     private void uploadGoodsInfo() {
-
+        //开始上传就显示上传ProgressBar
+        pbUploading.setVisibility(View.VISIBLE);
 
         barcodeResult = getEditTextString(etBarCode);
 
-        ArrayList<GoodsBean.DataBean> data = myDataAdapter.getData();
+        data = myDataAdapter.getData();
+        Subscriber<TempObject> subscriber = new Subscriber<TempObject>() {
 
-        GoodsBean.DataBean dataBean = data.get(uploadIndex);
+            @Override
+            public void onError(Throwable e) {
+                Log.d("UploadGoodsInfoActivity", "onError" + e.getMessage());
+                Log.d("UploadGoodsInfoActivity", "压错错误");
+            }
+
+            @Override
+            public void onCompleted() {
+                Log.d("UploadGoodsInfoActivity", "压缩完毕");
+
+            }
+
+            @Override
+            public void onNext(TempObject tempObject) {
+                Log.d("UploadGoodsInfoActivity", "开始上传");
+                uploadCompressFile(tempObject);
+            }
+        };
+
+        Observable<TempObject> observable = Observable.create(new Observable.OnSubscribe<TempObject>() {
+
+            @Override
+            public void call(Subscriber<? super TempObject> subscriber) {
+                if (!subscriber.isUnsubscribed()) {
+                    subscriber.onNext(compressImg(data.get(uploadIndex)));
+                    subscriber.onCompleted();
+                }
+            }
+        });
+
+        observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(subscriber);
+    }
+
+
+    private void uploadCompressFile(TempObject tempObject) {
+        GoodsBean.DataBean dataBean = tempObject.dataBean;
+        ArrayList<String> newFileLists = tempObject.newFileLists;
 
         MyObj myObj = new MyObj();
 
         HashMap<String, RequestBody> photoMap = new HashMap<>();
 
-        for (int k = 0; k < dataBean.img_url.length; k++) {
+        for (int k = 0; k < newFileLists.size(); k++) {
 
-            File file = new File(dataBean.img_url[k]);
+            File file = new File(newFileLists.get(k));
 
 //                UploadFileRequestBody uploadFileRequestBody = new UploadFileRequestBody(file, new DefaultProgressListener(mHandler, i));
 
             int index = uploadIndex;
             int definiteNumber = k;
-            int totalUpLoadImagesNumber = dataBean.img_url.length;
+            int totalUpLoadImagesNumber = newFileLists.size();
 
             ProgressRequestBody uploadFileRequestBody =
                     new ProgressRequestBody(
@@ -206,7 +301,6 @@ public class UploadGoodsInfoActivity extends BaseActivity implements View.OnClic
                     @Override
                     public void onStart() {
                         super.onStart();
-                        pbUploading.setVisibility(View.VISIBLE);
 
                     }
 

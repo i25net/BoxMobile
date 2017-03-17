@@ -36,7 +36,8 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="60dp"
         android:padding="20dp"
-        android:src="@drawable/home" />
+        android:src="@drawable/home"
+        android:visibility="invisible" />
 
 
     <LinearLayout

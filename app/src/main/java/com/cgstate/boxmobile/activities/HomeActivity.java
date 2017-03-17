@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -57,7 +56,6 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener, V
         initTitleData();
         initRecyclerViewDivider();
         initData();
-        getDisplay();
     }
 
     private void initDisplay() {
@@ -65,14 +63,6 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener, V
 
         width = wm.getDefaultDisplay().getWidth();
     }
-
-    public void getDisplay() {
-        float xdpi = getResources().getDisplayMetrics().xdpi;
-        float ydpi = getResources().getDisplayMetrics().ydpi;
-        Log.d("HomeActivity", "xdpi:" + xdpi);
-        Log.d("HomeActivity", "ydpi:" + ydpi);
-    }
-
 
     /**
      * 启动服务
@@ -110,6 +100,7 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener, V
         clazzList = new ArrayList<>();
         clazzList.add(UploadGoodsInfoActivity.class);//第一个
         clazzList.add(DownLoadGoodsInfoActivity.class);//第二个
+        clazzList.add(AboutActivity.class);//第三个
 
         mDatas = new ArrayList<>();
 
@@ -190,7 +181,6 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener, V
             }
         });
         builder.show();
-
     }
 
 

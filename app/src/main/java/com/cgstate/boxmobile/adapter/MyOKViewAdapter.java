@@ -52,7 +52,7 @@ public class MyOKViewAdapter extends RecyclerView.Adapter {
             final OKDetailViewHolder okDetailViewHolder = (OKDetailViewHolder) holder;
             Picasso.with(mContext)
 //                .load(Constant.BASE_URL + mDatas.get(position).img_url[0] + "&token=" + Constant.TOKEN)
-                    .load(Constant.BASE_URL + imgUrls.get(position))
+                    .load(Constant.BASE_URL_NO_END + imgUrls.get(position))
                     .centerCrop()
                     .resize(DensityUtils.dip2px(80, mContext), DensityUtils.dip2px(80, mContext))
                     .into(okDetailViewHolder.ivDetailShow, new Callback() {

@@ -60,7 +60,7 @@ public class MyOKDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         Picasso.with(mContext)
 //                .load(Constant.BASE_URL + mDatas.get(position).img_url[0] + "&token=" + Constant.TOKEN)
-                .load(Constant.BASE_URL + mDatas.get(position).img_url[0])
+                .load(Constant.BASE_URL_NO_END + mDatas.get(position).img_url[0])
                 .centerCrop()
                 .resize(DensityUtils.dip2px(80, mContext), DensityUtils.dip2px(80, mContext))
                 .into((okViewHolder).ivPic, new Callback() {

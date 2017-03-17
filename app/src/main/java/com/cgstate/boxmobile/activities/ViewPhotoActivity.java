@@ -22,6 +22,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 import uk.co.senab.photoview.PhotoView;
+import uk.co.senab.photoview.PhotoViewAttacher;
 
 public class ViewPhotoActivity extends BaseActivity {
 
@@ -116,15 +117,18 @@ public class ViewPhotoActivity extends BaseActivity {
             String imgURL = imgUrls.get(position);
             PhotoView photoView = new PhotoView(container.getContext());
             photoView.setTag(imgURL);
-//            photoViewAttacher = new PhotoViewAttacher(photoView);
+            final PhotoViewAttacher photoViewAttacher = new PhotoViewAttacher(photoView);
+
+
             Picasso.with(mContext)
-                    .load(Constant.BASE_URL + imgURL)
+                    .load(Constant.BASE_URL_NO_END + imgURL)
                     .config(Bitmap.Config.RGB_565)
                     .fit()
-                    .memoryPolicy(MemoryPolicy.NO_CACHE,MemoryPolicy.NO_STORE)
+                    .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
                     .into(photoView, new Callback() {
                         @Override
                         public void onSuccess() {
+                            photoViewAttacher.update();
                             pbLoading.setVisibility(View.GONE);
                         }
 

@@ -32,6 +32,7 @@ public class Constant {
 
 
     public static final String BASE_URL = "http://192.168.9.151:8092/";
+    public static final String BASE_URL_NO_END = BASE_URL.substring(0, BASE_URL.length() - 1);
     public static final String APP_LOGIN = "Account/Login";
     public static final String GET_DEVICE_INFO = "BarCodeInfo/GetBriefDevs";
     public static final String GET_BARCODE_CONTAIN_DATA = "BarCodeInfo/GetBarCodeInfos";
