@@ -9,7 +9,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -24,7 +23,7 @@ import java.math.BigDecimal;
 public class AboutActivity extends BaseActivity implements View.OnClickListener {
 
     private Toolbar mToolbar;
-    private ImageView ivAbout;
+    private TextView ivAbout;
     private RelativeLayout btnClearCache;
     private TextView tvCacheSize;
     private Button btnExitApp;
@@ -49,7 +48,7 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
         }
 
 
-        ivAbout = (ImageView) findViewById(R.id.iv_about);
+        ivAbout = (TextView) findViewById(R.id.iv_about);
         btnClearCache = (RelativeLayout) findViewById(R.id.btn_clear_cache);
         tvCacheSize = (TextView) findViewById(R.id.tv_cache_size);
         btnExitApp = (Button) findViewById(R.id.btn_exit_app);

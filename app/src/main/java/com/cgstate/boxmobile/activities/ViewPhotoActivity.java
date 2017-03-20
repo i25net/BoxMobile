@@ -1,23 +1,29 @@
 package com.cgstate.boxmobile.activities;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.model.GlideUrl;
+import com.bumptech.glide.load.model.LazyHeaders;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.cgstate.boxmobile.R;
+import com.cgstate.boxmobile.adapter.PhotoViewPagerAdapter;
+import com.cgstate.boxmobile.fragments.ViewDetailFragment;
 import com.cgstate.boxmobile.global.Constant;
 import com.cgstate.boxmobile.view.ViewPagerFixed;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.MemoryPolicy;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -54,9 +60,16 @@ public class ViewPhotoActivity extends BaseActivity {
 
             mToolbar.setTitle("查看大图\t( " + (pos + 1) + "/" + imgUrls.size() + " )");
 
-            final MyViewPagerAdapter myViewPagerAdapter = new MyViewPagerAdapter();
+//            final MyViewPagerAdapter myViewPagerAdapter = new MyViewPagerAdapter();
 
-            mViewPager.setAdapter(myViewPagerAdapter);
+            ArrayList<ViewDetailFragment> fragments = new ArrayList<>();
+            for (int i = 0; i < imgUrls.size(); i++) {
+                ViewDetailFragment viewDetailFragment = ViewDetailFragment.newInstance(imgUrls.get(i));
+                fragments.add(viewDetailFragment);
+            }
+
+
+            mViewPager.setAdapter(new PhotoViewPagerAdapter(getSupportFragmentManager(),fragments));
 
             mViewPager.setCurrentItem(pos);
 
@@ -92,12 +105,17 @@ public class ViewPhotoActivity extends BaseActivity {
 
 
         mViewPager = (ViewPagerFixed) findViewById(R.id.vp_big_show);
-        pbLoading = (ProgressBar) findViewById(R.id.pb_loading);
+//        pbLoading = (ProgressBar) findViewById(R.id.pb_loading);
 
     }
 
 
+
+
+
     class MyViewPagerAdapter extends PagerAdapter {
+
+        PhotoViewAttacher photoViewAttacher;
 
         public MyViewPagerAdapter() {
         }
@@ -115,28 +133,53 @@ public class ViewPhotoActivity extends BaseActivity {
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
             String imgURL = imgUrls.get(position);
-            PhotoView photoView = new PhotoView(container.getContext());
-            photoView.setTag(imgURL);
-            final PhotoViewAttacher photoViewAttacher = new PhotoViewAttacher(photoView);
+            String url = Constant.BASE_URL_NO_END + imgURL;
+            final PhotoView photoView = new PhotoView(container.getContext());
+//            photoView.setTag(imgURL);
 
 
-            Picasso.with(mContext)
-                    .load(Constant.BASE_URL_NO_END + imgURL)
-                    .config(Bitmap.Config.RGB_565)
-                    .fit()
-                    .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
-                    .into(photoView, new Callback() {
+            GlideUrl glideUrl = new GlideUrl(url, new LazyHeaders.Builder().addHeader("token", Constant.TOKEN).build());
+
+            Glide.with(mContext)
+                    .load(glideUrl)
+//                    .crossFade()//淡入淡出300ms
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .listener(new RequestListener<GlideUrl, GlideDrawable>() {
                         @Override
-                        public void onSuccess() {
-                            photoViewAttacher.update();
+                        public boolean onException(Exception e, GlideUrl model, Target<GlideDrawable> target, boolean isFirstResource) {
+                            Log.d("MyViewPagerAdapter", e.getMessage());
+                            showMyCustomToast("加载图片资源错误,请检查网络后重试");
                             pbLoading.setVisibility(View.GONE);
+                            return false;
                         }
 
                         @Override
-                        public void onError() {
+                        public boolean onResourceReady(GlideDrawable resource, GlideUrl model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                            photoViewAttacher = new PhotoViewAttacher(photoView);
                             pbLoading.setVisibility(View.GONE);
+                            return false;
                         }
-                    });
+                    })
+                    .into(photoView);
+
+
+//            Picasso.with(mContext)
+//                    .load(Constant.BASE_URL_NO_END + imgURL)
+//                    .config(Bitmap.Config.RGB_565)
+//                    .fit()
+//                    .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
+//                    .into(photoView, new Callback() {
+//                        @Override
+//                        public void onSuccess() {
+//                            photoViewAttacher.update();
+//                            pbLoading.setVisibility(View.GONE);
+//                        }
+//
+//                        @Override
+//                        public void onError() {
+//                            pbLoading.setVisibility(View.GONE);
+//                        }
+//                    });
 
 
             container.addView(photoView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);

@@ -6,13 +6,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bumptech.glide.Glide;
 import com.cgstate.boxmobile.R;
 import com.cgstate.boxmobile.activities.AddInfoActivity;
 import com.cgstate.boxmobile.global.Constant;
 import com.cgstate.boxmobile.utils.DensityUtils;
 import com.cgstate.boxmobile.viewholder.AddPicViewHolder;
 import com.cgstate.boxmobile.viewholder.PicSelectedViewHolder;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -96,11 +96,20 @@ public class SelectPicAdapter extends RecyclerView.Adapter {
                 }
             });
 
-            Picasso.with(mContext)
-                    .load("file://" + mFileList.get(position))
+            String filePos = mFileList.get(position);
+            int width = DensityUtils.dip2px(100, mContext);
+            Glide.with(mContext)
+                    .load(filePos)
                     .centerCrop()
-                    .resize(DensityUtils.dip2px(100, mContext), DensityUtils.dip2px(100, mContext))
+                    .override(width, width)
                     .into(((PicSelectedViewHolder) holder).ivShow);
+
+
+//            Picasso.with(mContext)
+//                    .load("file://" + mFileList.get(position))
+//                    .centerCrop()
+//                    .resize(DensityUtils.dip2px(100, mContext), DensityUtils.dip2px(100, mContext))
+//                    .into(((PicSelectedViewHolder) holder).ivShow);
         }
 
 

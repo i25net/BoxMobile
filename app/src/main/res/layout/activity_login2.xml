@@ -28,16 +28,29 @@
     </LinearLayout>
 
 
-    <de.hdodenhof.circleimageview.CircleImageView
+    <!--<de.hdodenhof.circleimageview.CircleImageView-->
+    <!--android:id="@+id/civ_top_img"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_alignParentTop="true"-->
+    <!--android:layout_centerHorizontal="true"-->
+    <!--android:layout_marginTop="60dp"-->
+    <!--android:padding="20dp"-->
+    <!--android:src="@drawable/home"-->
+    <!--android:visibility="invisible" />-->
+    <TextView
         android:id="@+id/civ_top_img"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
         android:layout_marginTop="60dp"
+        android:gravity="center"
         android:padding="20dp"
-        android:src="@drawable/home"
-        android:visibility="invisible" />
+        android:text="畅当物管信息系统"
+        android:textColor="@color/colorWhite"
+        android:textSize="25sp" />
 
 
     <LinearLayout

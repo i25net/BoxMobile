@@ -10,13 +10,20 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Display;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewTreeObserver;
+import android.view.WindowManager;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ProgressBar;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.cgstate.boxmobile.R;
@@ -61,10 +68,12 @@ public class UploadGoodsInfoActivity extends BaseActivity implements View.OnClic
     private ArrayAdapter<String> arrayAdapter;
     private MyDataAdapter myDataAdapter;
     private TextView btnUploadGoodsInfo;
-    private ProgressBar pbUploading;
     private String mSelectedDeviceId;
     private String barcodeResult;
     private ArrayList<GoodsBean.DataBean> data;
+
+    private RelativeLayout rlUpDetailContainer;
+    private ImageView imageView;
 
 
     @Override
@@ -78,6 +87,9 @@ public class UploadGoodsInfoActivity extends BaseActivity implements View.OnClic
     @Override
     protected void onResume() {
         super.onResume();
+        isFirst = true;
+        isUploading = false;
+        myDataAdapter.setUPloading(false);
         if (checkEmpty(mSelectedDeviceId)) {
             initData();
         }
@@ -98,11 +110,10 @@ public class UploadGoodsInfoActivity extends BaseActivity implements View.OnClic
             supportActionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-
-        pbUploading = (ProgressBar) findViewById(R.id.pb_uploading);
-
         mRecyclerView = (RecyclerView) findViewById(R.id.rv_data);
         btnUploadGoodsInfo = (TextView) findViewById(R.id.btn_uploadGoodInfo);
+        rlUpDetailContainer = (RelativeLayout) findViewById(R.id.rl_up_detail_container);
+
         btnUploadGoodsInfo.setOnClickListener(this);
 
 
@@ -111,6 +122,7 @@ public class UploadGoodsInfoActivity extends BaseActivity implements View.OnClic
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
 
         mRecyclerView.setAdapter(myDataAdapter);
+
 
 //        mRecyclerView.setItemAnimator(null);
 
@@ -140,7 +152,6 @@ public class UploadGoodsInfoActivity extends BaseActivity implements View.OnClic
             case R.id.btn_uploadGoodInfo:
                 checkExpired();
                 break;
-
         }
 
     }
@@ -156,7 +167,14 @@ public class UploadGoodsInfoActivity extends BaseActivity implements View.OnClic
             showMyCustomToast("请先输入条码信息");
             return;
         }
-        uploadGoodsInfo();
+
+        if (isUploading) {
+            showMyCustomToast("上传中...勿操作");
+            return;
+        } else {
+            uploadGoodsInfo();
+        }
+
     }
 
     class TempObject {
@@ -210,12 +228,25 @@ public class UploadGoodsInfoActivity extends BaseActivity implements View.OnClic
 
     private int uploadIndex = 0;
 
+    private boolean isFirst = true;
+
+
+    private boolean isUploading = false;
+
     /**
      * 上传物品信息
      */
     private void uploadGoodsInfo() {
-        //开始上传就显示上传ProgressBar
-        pbUploading.setVisibility(View.VISIBLE);
+
+        //点击了上传按钮后设置按钮不可点击
+        isUploading = true;
+        myDataAdapter.setUPloading(true);
+
+        //建立上传进度显示条
+        if (isFirst) {
+            createUpProgressView();
+        }
+
 
         barcodeResult = getEditTextString(etBarCode);
 
@@ -230,7 +261,7 @@ public class UploadGoodsInfoActivity extends BaseActivity implements View.OnClic
 
             @Override
             public void onCompleted() {
-                Log.d("UploadGoodsInfoActivity", "压缩完毕");
+                Log.d("UploadGoodsInfoActivity", "上传完毕");
 
             }
 
@@ -255,6 +286,45 @@ public class UploadGoodsInfoActivity extends BaseActivity implements View.OnClic
         observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(subscriber);
+    }
+
+    private void createUpProgressView() {
+
+        WindowManager windowManager = getWindowManager();
+        Display defaultDisplay = windowManager.getDefaultDisplay();
+        final int width = defaultDisplay.getWidth();
+        final int[] xPos = new int[1];
+
+        imageView = new ImageView(mContext);
+        imageView.setBackgroundResource(R.drawable.up);
+        imageView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                xPos[0] = (width / 2) - (imageView.getWidth() / 2);
+                imageView.setX(xPos[0]);
+                imageView.setY(50);
+                imageView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+            }
+        });
+
+
+        TranslateAnimation translateAnimation = new TranslateAnimation(
+                Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, 0,
+                Animation.RELATIVE_TO_SELF, 1.6f,
+                Animation.RELATIVE_TO_SELF, 1.1f
+
+        );
+        translateAnimation.setDuration(1000);
+        translateAnimation.setRepeatMode(Animation.RESTART);
+        translateAnimation.setRepeatCount(Animation.INFINITE);
+        translateAnimation.setInterpolator(new AccelerateDecelerateInterpolator(mContext,null));
+
+        imageView.startAnimation(translateAnimation);
+
+
+        rlUpDetailContainer.addView(imageView);
+
+
     }
 
 
@@ -312,7 +382,8 @@ public class UploadGoodsInfoActivity extends BaseActivity implements View.OnClic
                     @Override
                     public void onError(Throwable e) {
                         super.onError(e);
-                        pbUploading.setVisibility(View.INVISIBLE);
+                        isUploading = false;
+                        myDataAdapter.setUPloading(false);
                         showMyCustomToast("上传失败,请重新上传!");
                         return;
                     }
@@ -326,8 +397,9 @@ public class UploadGoodsInfoActivity extends BaseActivity implements View.OnClic
      * @param bean
      */
     private void processUpLoadData(BaseBean bean) {
-
         if (bean.IsError) {//有错误
+            rlUpDetailContainer.removeView(imageView);
+            isFirst = true;
             if ("1".equals(bean.ErrorCode)) {
                 showMyCustomToast(bean.ErrorMessage);
                 GoToLoginActivity.goToLoginActivity(mContext);
@@ -337,7 +409,9 @@ public class UploadGoodsInfoActivity extends BaseActivity implements View.OnClic
         } else {//无错误提示
             uploadIndex++;
             if (uploadIndex == myDataAdapter.getData().size()) {
-                pbUploading.setVisibility(View.VISIBLE);
+                rlUpDetailContainer.removeView(imageView);
+                isUploading = false;
+                myDataAdapter.setUPloading(false);
                 showMyCustomToast("全部图文信息上传成功!");
                 new Handler().postDelayed(new Runnable() {
                     @Override
@@ -346,6 +420,7 @@ public class UploadGoodsInfoActivity extends BaseActivity implements View.OnClic
                     }
                 }, 300);
             } else {
+                isFirst = false;
                 uploadGoodsInfo();
             }
         }
@@ -502,10 +577,25 @@ public class UploadGoodsInfoActivity extends BaseActivity implements View.OnClic
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                finish();
+                if (isUploading) {
+                    showMyCustomToast("上传中...按钮返回");
+                    return true;
+                } else {
+                    finish();
+                }
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (isUploading) {
+            showMyCustomToast("上传中...实体键返回");
+            return;
+        } else {
+            finish();
+        }
     }
 
 

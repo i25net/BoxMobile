@@ -26,6 +26,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <meta-data
+            android:name="com.cgstate.boxmobile.global.GlideCache"
+            android:value="GlideModule" />
+
         <activity
             android:name=".activities.CodeScanActivity"
             android:screenOrientation="portrait" />
@@ -60,8 +64,8 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.AboutActivity"
-            android:label="@string/title_activity_about"
-            android:theme="@style/AppTheme"></activity>
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"></activity>
     </application>
 
 </manifest>

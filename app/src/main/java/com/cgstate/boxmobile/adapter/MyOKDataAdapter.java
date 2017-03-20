@@ -8,14 +8,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.model.GlideUrl;
+import com.bumptech.glide.load.model.LazyHeaders;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.cgstate.boxmobile.R;
 import com.cgstate.boxmobile.activities.ViewDetailActivity;
 import com.cgstate.boxmobile.bean.GoodsBean;
 import com.cgstate.boxmobile.global.Constant;
 import com.cgstate.boxmobile.utils.DensityUtils;
 import com.cgstate.boxmobile.viewholder.OKViewHolder;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -58,22 +62,44 @@ public class MyOKDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         okViewHolder.tvColor.setText(mDatas.get(position).goods_color);
         okViewHolder.tvMemo.setText(mDatas.get(position).goods_memo);
 
-        Picasso.with(mContext)
-//                .load(Constant.BASE_URL + mDatas.get(position).img_url[0] + "&token=" + Constant.TOKEN)
-                .load(Constant.BASE_URL_NO_END + mDatas.get(position).img_url[0])
+        String url = Constant.BASE_URL_NO_END + mDatas.get(position).img_url[0];
+        GlideUrl glideUrl = new GlideUrl(url, new LazyHeaders.Builder().addHeader("token", Constant.TOKEN).build());
+
+        int width = DensityUtils.dip2px(80, mContext);
+        Glide.with(mContext)
+                .load(glideUrl)
                 .centerCrop()
-                .resize(DensityUtils.dip2px(80, mContext), DensityUtils.dip2px(80, mContext))
-                .into((okViewHolder).ivPic, new Callback() {
+                .override(width, width)
+                .listener(new RequestListener<GlideUrl, GlideDrawable>() {
                     @Override
-                    public void onSuccess() {
+                    public boolean onException(Exception e, GlideUrl model, Target<GlideDrawable> target, boolean isFirstResource) {
                         okViewHolder.pbLoading.setVisibility(View.GONE);
+                        return false;
                     }
 
                     @Override
-                    public void onError() {
+                    public boolean onResourceReady(GlideDrawable resource, GlideUrl model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
                         okViewHolder.pbLoading.setVisibility(View.GONE);
+                        return false;
                     }
-                });
+                })
+                .into(okViewHolder.ivPic);
+
+//        Picasso.with(mContext)
+//                .load(Constant.BASE_URL_NO_END + mDatas.get(position).img_url[0])
+//                .centerCrop()
+//                .resize(DensityUtils.dip2px(80, mContext), DensityUtils.dip2px(80, mContext))
+//                .into((okViewHolder).ivPic, new Callback() {
+//                    @Override
+//                    public void onSuccess() {
+//                        okViewHolder.pbLoading.setVisibility(View.GONE);
+//                    }
+//
+//                    @Override
+//                    public void onError() {
+//                        okViewHolder.pbLoading.setVisibility(View.GONE);
+//                    }
+//                });
 
 
         okViewHolder.llViewDetail.setOnClickListener(new View.OnClickListener() {

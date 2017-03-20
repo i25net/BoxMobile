@@ -10,15 +10,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bumptech.glide.Glide;
 import com.cgstate.boxmobile.R;
 import com.cgstate.boxmobile.activities.AddInfoActivity;
 import com.cgstate.boxmobile.activities.UploadGoodsInfoActivity;
 import com.cgstate.boxmobile.bean.GoodsBean;
 import com.cgstate.boxmobile.global.Constant;
+import com.cgstate.boxmobile.utils.CustomToast;
 import com.cgstate.boxmobile.utils.DensityUtils;
 import com.cgstate.boxmobile.viewholder.EmptyViewHolder;
 import com.cgstate.boxmobile.viewholder.ShowViewHolder;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -31,6 +32,16 @@ public class MyDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private static final int show = 1;
     private static final int empty = -1;
     private Context mContext;
+
+    public boolean isUPloading() {
+        return isUPloading;
+    }
+
+    public void setUPloading(boolean UPloading) {
+        isUPloading = UPloading;
+    }
+
+    private boolean isUPloading = false;
 
 
     public ArrayList<GoodsBean.DataBean> getData() {
@@ -63,25 +74,47 @@ public class MyDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof EmptyViewHolder) {
+
             //如果是空白的条目,获取点击事件,打开选择图片的界面
             ((EmptyViewHolder) holder).rlAddData.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     //回调给上传也展示信息,
-                    Intent intent = new Intent(mContext, AddInfoActivity.class);
-                    ((UploadGoodsInfoActivity) mContext).startActivityForResult(intent, Constant.GOODS_INFO_ADD_REQUEST_CODE);
+
+                    if (isUPloading()) {
+                        CustomToast.showToast(mContext, "上传中...请不要添加条目", 500);
+                        return;
+                    } else {
+                        Intent intent = new Intent(mContext, AddInfoActivity.class);
+                        ((UploadGoodsInfoActivity) mContext).startActivityForResult(intent, Constant.GOODS_INFO_ADD_REQUEST_CODE);
+                    }
+
+
                 }
             });
-        } else if (holder instanceof ShowViewHolder) {
+
+        } else if (holder instanceof ShowViewHolder)
+
+        {
             ((ShowViewHolder) holder).tvName.setText(mDatas.get(position).goods_name);
             ((ShowViewHolder) holder).tvWeight.setText(mDatas.get(position).goods_weight);
             ((ShowViewHolder) holder).tvColor.setText(mDatas.get(position).goods_color);
             ((ShowViewHolder) holder).tvMemo.setText(mDatas.get(position).goods_memo);
-            Picasso.with(mContext)
-                    .load("file://" + mDatas.get(position).img_url[0])
+
+            String filePos = mDatas.get(position).img_url[0];
+            int width = DensityUtils.dip2px(80, mContext);
+            Glide.with(mContext)
+                    .load(filePos)
                     .centerCrop()
-                    .resize(DensityUtils.dip2px(80, mContext), DensityUtils.dip2px(80, mContext))
+                    .override(width, width)
                     .into(((ShowViewHolder) holder).ivPic);
+
+
+//            Picasso.with(mContext)
+//                    .load("file://" + mDatas.get(position).img_url[0])
+//                    .centerCrop()
+//                    .resize(DensityUtils.dip2px(80, mContext), DensityUtils.dip2px(80, mContext))
+//                    .into(((ShowViewHolder) holder).ivPic);
 
             final int pos = holder.getLayoutPosition();
 
@@ -89,44 +122,56 @@ public class MyDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             ((ShowViewHolder) holder).progressBar.setMax(mDatas.get(pos).maxProgress);
             ((ShowViewHolder) holder).progressBar.setProgress(mDatas.get(pos).progress);
 
-
             ((ShowViewHolder) holder).btnDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-                    builder.setTitle("提示");
-                    builder.setMessage("确认要删除当前条目?");
-                    builder.setPositiveButton("确认删除", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            mDatas.remove(pos);
-                            notifyItemRemoved(pos);
-                            if (pos != mDatas.size()) { // 如果移除的是最后一个，忽略
-                                notifyItemRangeChanged(pos, mDatas.size() - pos);
+                    if (isUPloading()) {
+                        CustomToast.showToast(mContext, "上传中...请不要删除", 500);
+                        return;
+                    } else {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                        builder.setTitle("提示");
+                        builder.setMessage("确认要删除当前条目?");
+                        builder.setPositiveButton("确认删除", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                mDatas.remove(pos);
+                                notifyItemRemoved(pos);
+                                if (pos != mDatas.size()) { // 如果移除的是最后一个，忽略
+                                    notifyItemRangeChanged(pos, mDatas.size() - pos);
+                                }
                             }
-                        }
-                    });
-                    builder.setNegativeButton("取消操作", null);
-                    builder.show();
+                        });
+                        builder.setNegativeButton("取消操作", null);
+                        builder.show();
+                    }
                 }
             });
-
 
             ((ShowViewHolder) holder).btnEdit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(mContext, AddInfoActivity.class);
-                    intent.putExtra("edit", true);
-                    intent.putExtra("index", pos);
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("editInfo", mDatas.get(pos));
-                    intent.putExtras(bundle);
-                    ((UploadGoodsInfoActivity) mContext).startActivityForResult(intent, Constant.GOODS_INFO_EDIT_REQUEST_CODE);
+                    if (isUPloading()) {
+                        CustomToast.showToast(mContext, "上传中...请不要编辑", 500);
+                        return;
+                    } else {
+                        Intent intent = new Intent(mContext, AddInfoActivity.class);
+                        intent.putExtra("edit", true);
+                        intent.putExtra("index", pos);
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("editInfo", mDatas.get(pos));
+                        intent.putExtras(bundle);
+                        ((UploadGoodsInfoActivity) mContext).startActivityForResult(intent, Constant.GOODS_INFO_EDIT_REQUEST_CODE);
+                    }
                 }
             });
 
+
         }
+
+
     }
+
 
     @Override
     public int getItemCount() {
