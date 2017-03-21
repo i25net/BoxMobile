@@ -29,6 +29,7 @@ public class OkHttpUtils {
                         .readTimeout(Constant.READ_TIMEOUT, TimeUnit.MILLISECONDS)
                         .writeTimeout(Constant.WRITE_TIMEOUT, TimeUnit.MILLISECONDS)
                         .addInterceptor(new BaseInterceptor())
+                        .addInterceptor(new TimeOutInterceptor())
                         .build();
     }
 

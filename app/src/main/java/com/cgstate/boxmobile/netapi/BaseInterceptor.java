@@ -18,11 +18,10 @@ public class BaseInterceptor implements Interceptor {
     @Override
     public Response intercept(Chain chain) throws IOException {
         String token = Constant.TOKEN;
-
-        Request request = chain.request()
+        Request originalRequest = chain.request()
                 .newBuilder()
                 .addHeader("token", token)
                 .build();
-        return chain.proceed(request);
+        return chain.proceed(originalRequest);
     }
 }

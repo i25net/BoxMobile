@@ -71,6 +71,7 @@
                 android:background="@drawable/dialog_background"
                 android:gravity="center"
                 android:inputType="number"
+                android:imeOptions="actionDone"
                 android:singleLine="true"
                 android:textSize="18sp" />
 

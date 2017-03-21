@@ -21,11 +21,14 @@ public class CheckTokenExpired {
         long lastLoginTime = -1;
 
         if (Constant.EXPIRED_TIME_SECONDS > 0) {
+            Log.d("CheckTokenExpired", "Constant.EXPIRED_TIME_SECONDS:" + Constant.EXPIRED_TIME_SECONDS);
+
             expiredSeconds = Constant.EXPIRED_TIME_SECONDS * 1000;
             expiredSeconds = expiredSeconds - 10000;
         }
 
         if (Constant.LAST_RIGHT_TIME > 0) {
+            Log.d("CheckTokenExpired", "Constant.LAST_RIGHT_TIME > 0");
             lastLoginTime = Constant.LAST_RIGHT_TIME;
         }
 

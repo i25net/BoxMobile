@@ -50,12 +50,14 @@ public class MyRetrofitClient {
         if (TextUtils.isEmpty(url)) {
             url = baseUrl;
         }
+
         mOkHttpClient = new OkHttpClient.Builder()
                 .connectTimeout(Constant.CONNECT_TIMEOUT, TimeUnit.MILLISECONDS)
                 .readTimeout(Constant.READ_TIMEOUT, TimeUnit.MILLISECONDS)
                 .writeTimeout(Constant.WRITE_TIMEOUT, TimeUnit.MILLISECONDS)
-                .addInterceptor(new BaseInterceptor())
+                .addInterceptor(new TimeOutInterceptor())
                 .build();
+
         Retrofit retrofit = new Retrofit.Builder()
                 .client(mOkHttpClient)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -63,11 +65,6 @@ public class MyRetrofitClient {
                 .baseUrl(url)
                 .build();
         apiControl = retrofit.create(ApiControl.class);
-    }
-
-
-    public OkHttpClient getOkHttpClient() {
-        return mOkHttpClient;
     }
 
     public ApiControl getApiControl() {
