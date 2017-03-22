@@ -67,14 +67,8 @@ public class TimeOutInterceptor implements Interceptor {
                     loginResponse.body().close();
 
                     Request.Builder builder = originalRequest.newBuilder();
-
-
                     Request newRequest = builder.header("token", Constant.TOKEN).build();
 
-                    String token1 = newRequest.header("token");
-                    String token2 = originalRequest.header("token");
-                    Log.d("TimeOutInterceptor", "newRequest-----token1:---" + token1);
-                    Log.d("TimeOutInterceptor", "originalRequest-----token2:---" + token2);
                     return chain.proceed(newRequest);
                 }
             }

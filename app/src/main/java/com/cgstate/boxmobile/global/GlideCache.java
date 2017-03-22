@@ -24,6 +24,15 @@ public class GlideCache implements GlideModule {
 
     @Override
     public void registerComponents(Context context, Glide glide) {
+//        glide.register(GlideUrl.class, InputStream.class, new OkHttpUrlLoader.Factory());
+//
+////        OkHttpClient mOkHttpClient = new OkHttpClient.Builder()
+////                .connectTimeout(Constant.CONNECT_TIMEOUT, TimeUnit.MILLISECONDS)
+////                .readTimeout(Constant.READ_TIMEOUT, TimeUnit.MILLISECONDS)
+////                .writeTimeout(Constant.WRITE_TIMEOUT, TimeUnit.MILLISECONDS)
+////                .addInterceptor(new TimeOutInterceptor())
+////                .build();
+////        glide.register(GlideUrl.class, InputStream.class, new OkHttpUrlLoader.Factory());
 
     }
 }

@@ -67,6 +67,11 @@ public class MyRetrofitClient {
         apiControl = retrofit.create(ApiControl.class);
     }
 
+
+    public OkHttpClient getOkHttpClient() {
+        return mOkHttpClient;
+    }
+
     public ApiControl getApiControl() {
         return apiControl;
     }

@@ -8,15 +8,17 @@ import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.model.GlideUrl;
-import com.bumptech.glide.load.model.LazyHeaders;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.cgstate.boxmobile.R;
 import com.cgstate.boxmobile.global.Constant;
+import com.cgstate.boxmobile.global.OkHttpUrlLoader;
+import com.cgstate.boxmobile.netapi.MyRetrofitClient;
 import com.cgstate.boxmobile.utils.DensityUtils;
 import com.cgstate.boxmobile.viewholder.OKDetailViewHolder;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 
 /**
@@ -56,28 +58,34 @@ public class MyOKViewAdapter extends RecyclerView.Adapter {
             final OKDetailViewHolder okDetailViewHolder = (OKDetailViewHolder) holder;
 
             String url = Constant.BASE_URL_NO_END + imgUrls.get(position);
-            GlideUrl glideUrl = new GlideUrl(url, new LazyHeaders.Builder().addHeader("token", Constant.TOKEN).build());
+
+
+//            GlideUrl glideUrl = new GlideUrl(url, new LazyHeaders.Builder().addHeader("token", Constant.TOKEN).build());
+
+
+            Glide.get(mContext)
+                    .register(GlideUrl.class, InputStream.class, new OkHttpUrlLoader.Factory(MyRetrofitClient.getInstance().getOkHttpClient()));
+
 
             int width = DensityUtils.dip2px(80, mContext);
             Glide.with(mContext)
-                    .load(glideUrl)
+                    .load(url)
                     .centerCrop()
                     .override(width, width)
-                    .listener(new RequestListener<GlideUrl, GlideDrawable>() {
+                    .listener(new RequestListener<String, GlideDrawable>() {
                         @Override
-                        public boolean onException(Exception e, GlideUrl model, Target<GlideDrawable> target, boolean isFirstResource) {
+                        public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
                             okDetailViewHolder.pbLoading.setVisibility(View.GONE);
                             return false;
                         }
 
                         @Override
-                        public boolean onResourceReady(GlideDrawable resource, GlideUrl model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                        public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
                             okDetailViewHolder.pbLoading.setVisibility(View.GONE);
                             return false;
                         }
                     })
                     .into(okDetailViewHolder.ivDetailShow);
-
 
 
 //            Picasso.with(mContext)

@@ -11,12 +11,15 @@ import android.widget.ProgressBar;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.model.GlideUrl;
-import com.bumptech.glide.load.model.LazyHeaders;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.cgstate.boxmobile.R;
 import com.cgstate.boxmobile.global.Constant;
+import com.cgstate.boxmobile.global.OkHttpUrlLoader;
+import com.cgstate.boxmobile.netapi.MyRetrofitClient;
+
+import java.io.InputStream;
 
 import uk.co.senab.photoview.PhotoView;
 
@@ -73,15 +76,19 @@ public class ViewDetailFragment extends BaseFragment {
             pbLoading.setVisibility(View.VISIBLE);
             String url = Constant.BASE_URL_NO_END + imageUrl;
 
-            GlideUrl glideUrl = new GlideUrl(url, new LazyHeaders.Builder().addHeader("token", Constant.TOKEN).build());
+//            GlideUrl glideUrl = new GlideUrl(url, new LazyHeaders.Builder().addHeader("token", Constant.TOKEN).build());
+
+            Glide.get(mContext)
+                    .register(GlideUrl.class, InputStream.class, new OkHttpUrlLoader.Factory(MyRetrofitClient.getInstance().getOkHttpClient()));
+
 
             Glide.with(this)
-                    .load(glideUrl)
+                    .load(url)
 //                    .crossFade()//淡入淡出300ms
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .listener(new RequestListener<GlideUrl, GlideDrawable>() {
+                    .listener(new RequestListener<String, GlideDrawable>() {
                         @Override
-                        public boolean onException(Exception e, GlideUrl model, Target<GlideDrawable> target, boolean isFirstResource) {
+                        public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
 //                        Log.d("MyViewPagerAdapter", e.getMessage());
                             pbLoading.setVisibility(View.INVISIBLE);
                             Log.d("onException", "onResourceReady");
@@ -89,7 +96,7 @@ public class ViewDetailFragment extends BaseFragment {
                         }
 
                         @Override
-                        public boolean onResourceReady(GlideDrawable resource, GlideUrl model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                        public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
                             pbLoading.setVisibility(View.INVISIBLE);
                             Log.d("ViewDetailFragment", "onResourceReady");
                             return false;

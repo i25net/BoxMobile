@@ -4,7 +4,10 @@ import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 
+import com.cgstate.boxmobile.netapi.MyRetrofitClient;
 import com.cgstate.boxmobile.services.UpDateTokenService;
+
+import okhttp3.OkHttpClient;
 
 /**
  * Created by Administrator on 2017/2/10.
@@ -13,13 +16,15 @@ import com.cgstate.boxmobile.services.UpDateTokenService;
 public class MyApplication extends Application {
     private static Context mContext;
     private static Intent service;
+    private OkHttpClient globalOkHttpClient;
 
     @Override
     public void onCreate() {
         super.onCreate();
         mContext = getApplicationContext();
         service = new Intent(mContext, UpDateTokenService.class);
-//        OkHttpClient picassoClient = MyRetrofitClient.getInstance().getOkHttpClient();
+//        initOkHttpClient();
+        //        OkHttpClient picassoClient = MyRetrofitClient.getInstance().getOkHttpClient();
 //        final Picasso picasso = new Picasso.Builder(mContext).downloader(new OkHttp3Downloader(picassoClient)).listener(new Picasso.Listener() {
 //            @Override
 //            public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
@@ -31,6 +36,10 @@ public class MyApplication extends Application {
 //        picasso.setIndicatorsEnabled(true);
 //
 //        Picasso.setSingletonInstance(picasso);
+    }
+
+    private void initOkHttpClient() {
+        globalOkHttpClient = MyRetrofitClient.getInstance().getOkHttpClient();
     }
 
     public static Context getContextObject() {
